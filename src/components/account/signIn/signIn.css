@@ -1,0 +1,23 @@
+/*======================== SignIn =======================*/
+
+.SignIn {
+  min-height: 100vh;
+}
+.SignIn .title {
+  font-size: 5rem;
+}
+.SignIn .separate {
+  margin-bottom: 2rem;
+  font-size: 1.5rem;
+  color: var(--text-color);
+}
+.SignIn .switch-links {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 2rem;
+  color: var(--text-color);
+  font-size: 1.6rem;
+}
+.SignIn .switch-links--light {
+  color: var(--text-color-light) !important;
+}

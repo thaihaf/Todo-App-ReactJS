@@ -1,0 +1,23 @@
+/*======================== Header =======================*/
+.Header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    padding: 3rem 10rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 1.6rem;
+    background-color: #1d1d26;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-transform: uppercase;
+    font-size: 3rem;
+    font-weight: 700;
+  }
+  .header__button:not(:last-child) {
+    margin-right: 2rem;
+  }
