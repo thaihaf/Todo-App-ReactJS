@@ -1,12 +1,36 @@
+// lib
 import React from "react";
+import { BrowserRouter as Router } from "react-router-dom";
 import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+import axios from "axios";
+import { toast } from "react-toastify";
+
+import FetchClient from "./service/defaultAPI/FetchClient";
+import setAuthToken from "./service/defaultAPI/setAuthToken";
+
+setAuthToken();
+
+axios.interceptors.response.use(
+  function (response) {
+    return response;
+  },
+  function (error) {
+    if (error.response.status == 401) {
+      toast.warn("This token is invalidated");
+      localStorage.removeItem("user");
+    }
+    return Promise.reject(error);
+  }
+);
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Router>
+      <App />
+    </Router>
   </React.StrictMode>,
   document.getElementById("root")
 );

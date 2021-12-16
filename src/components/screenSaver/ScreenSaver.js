@@ -1,27 +1,61 @@
-import React from "react";
-import Header from "../header/Header";
-import "./screenSaver.css";
+// lib
+import { createUseStyles } from "react-jss";
+import { Link } from "react-router-dom";
 
-export default function ScreenSaver() {
+// Component
+
+// =================================================================
+
+const useStyles = createUseStyles({
+  ScreenSaver: {
+    height: "100vh",
+  },
+  title: {
+    fontSize: "5rem",
+  },
+  desc: {
+    fontSize: "1.6rem",
+    color: "#a2c3d9",
+  },
+  screenSaver__buttons: {
+    display: "flex",
+    marginTop: "3rem",
+  },
+  screenSaver__button: {
+    textTransform: "capitalize",
+    fontWeight: "bold",
+  },
+});
+
+function ScreenSaver({ user }) {
+  const classes = useStyles();
+
   return (
-    <div className="ScreenSaver">
-      <Header />
-
+    <div className={classes.ScreenSaver}>
       <div className="content">
-        <h1 className="title">Todo App</h1>
-        <p className="desc">
+        <h1 className={classes.title}>Todo App</h1>
+        <p className={classes.desc}>
           Keep track of the daily tasks in life and get that satisfaction upon
           copletion.
         </p>
-        <div className="screenSaver__buttons">
-          <button className="screenSaver__button button btn--none-border btn--bg-pink btn--bb-pink">
-            get started
-          </button>
-          <button className="screenSaver__button button btn--none-border btn--bg-gray btn--bb-gray">
-            learn more
-          </button>
+        <div className={classes.screenSaver__buttons + " btns--flex"}>
+          <Link to={user.username ? "collections" : "users/signIn"}>
+            <button
+              className={`${classes.screenSaver__button} button btn--none-border btn--bg-pink btn--bb-pink btn--hover-trans`}
+            >
+              get start
+            </button>
+          </Link>
+          <Link to="">
+            <button
+              className={`${classes.screenSaver__button}  button btn--none-border btn--bg-gray btn--bb-gray btn--hover-trans`}
+            >
+              learn more
+            </button>
+          </Link>
         </div>
       </div>
     </div>
   );
 }
+export default ScreenSaver;

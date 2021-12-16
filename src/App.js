@@ -1,35 +1,88 @@
-// imr
+// lib
 import React from "react";
-// import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { createUseStyles } from "react-jss";
+import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 
-// import { useState, useEffect } from "react" - imrse;
+// Component
+import Header from "./components/header/Header";
+import Routers from "./routers/Routers";
 
-// import Component - ima
-import Home from "./components/home/Home";
-// import SignUp from "./components/account/signUp/SignUp";
-// import SignIn from "./components/account/signIn/SignIn";
-// import ResetPass from "./components/account/resetPass/ResetPass";
+import { ToastContainer, toast, Bounce } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+// Service
+import setAuthToken from "./service/defaultAPI/setAuthToken";
 
+// Css
 import "./App.css";
 
+// =================================================================
+const useStyles = createUseStyles({
+  App: {
+    backgroundImage: "url(https://tsks.app/img/signin_balls.png)",
+    backgroundColor: "#181820",
+    backgroundPosition: "top",
+    backgroundSize: "contain",
+    backgroundRepeat: "no-repeat",
+  },
+});
+
 function App() {
+  const navigate = useNavigate();
+  const classes = useStyles();
+
+  const [user, setUser] = useState({});
+
+  // Function
+  const HandleLogin = () => {
+    const userTemp = JSON.parse(localStorage.getItem("user"));
+    console.log(userTemp);
+
+    setAuthToken(userTemp.token);
+    setUser(userTemp);
+
+    toast.success("🦄 Loggin successfully!");
+    navigate("collections");
+  };
+  const HandleLogout = () => {
+    setUser({});
+
+    localStorage.removeItem("user");
+    toast.success("🦄 Logout successfully!");
+    navigate("users/signIn");
+  };
+
+  useEffect(() => {
+    const userTemp = JSON.parse(localStorage.getItem("user"));
+    if (userTemp) {
+      setAuthToken(userTemp.token);
+      setUser(userTemp);
+    }
+  }, []);
+
   return (
-    // <BrowserRouter>
-    <div
-      className="App"
-      style={{
-        backgroundImage: "url(" + "https://tsks.app/img/signin_balls.png" + ")",
-        backgroundColor: "#181820",
-      }}
-    >
-      <Home />
-      {/* <Routes>
-          <Route path="/" component={Home} exact />
-          <Route path="/signup" component={SignUp} />
-          <Route path="/signin" component={SignIn} />
-        </Routes> */}
+    <div className={classes.App}>
+      <Header
+        HandleLogout={HandleLogout}
+        HandleLogin={HandleLogin}
+        user={user}
+      />
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        transition={Bounce}
+        style={{ fontSize: "1.4rem" }}
+      />
+
+      <Routers HandleLogin={HandleLogin} user={user} />
     </div>
-    // </BrowserRouter>
   );
 }
 export default App;

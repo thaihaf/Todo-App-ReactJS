@@ -6,12 +6,13 @@
   --text-color: #c3c3cd;
   --text-color-light: #fff;
   --text-color-dark: #000;
-/* box-sizing:  padding-box; */
+  /* box-sizing:  padding-box; */
   /* Value */
 }
 
 * {
   box-sizing: inherit;
+  font-family: "Inter", sans-serif;
 }
 html {
   font-size: 62.5%;
@@ -19,35 +20,42 @@ html {
 }
 
 a {
-  text-decoration: none;
-  color: var(--text-color-light);
+  text-decoration: none !important;
+  color: #fff !important;
 }
-
+/* {error !== "" ? <div className="signin__error">{error}</div> : ""} */
 .button,
 input {
   padding: 1.2rem 2.4rem;
-  border-radius: 1.1rem;
+  border-radius: 1rem;
   font-size: 1.6rem;
   color: var(--text-color-light);
   background-color: transparent;
   cursor: pointer;
-  transition: 0.2s all ease;
+  transition: 0.3s all ease;
   margin-bottom: 2rem;
 }
 .button.btn--flex {
-  padding: 1.6rem 0;
+  padding: 1.3rem 0;
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 0.7rem;
   font-weight: 500;
 }
+.btns--flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+}
 .button.btn--full-width,
 input.btn--full-width {
   width: 100%;
 }
 
-.button.btn--none-border, input.input--none-border {
+.button.btn--none-border,
+input.input--none-border {
   border: none;
   outline: none;
 }
@@ -56,6 +64,9 @@ input.btn--full-width {
   border: 3px solid #30303d;
 }
 
+.btn--border-error {
+  border: 3px solid red;
+}
 .button.btn--bb-pink {
   border-bottom: 3.5px solid #a74391;
 }
@@ -70,14 +81,30 @@ input.btn--full-width {
   background-color: var(--bg-btn-gray);
 }
 
-.button.btn--hover-bb:hover {
+.button.btn--hover-bb:hover,
+.input--focus-bb:focus {
   border-bottom: 3px solid var(--bg-btn-pink);
 }
-.button.btn--hover-border:hover {
+.button.btn--hover-border:hover,
+.input--focus-border:focus {
   border: 3px solid var(--bg-btn-pink);
 }
 .button.btn--hover-bg-gray:hover {
   background-color: var(--bg-btn-gray);
+}
+.button.btn--hover-border:hover {
+  border: 3px solid var(--bg-btn-pink);
+}
+.button.btn--hover-bg-gray-light:hover {
+  background-color: #888c9c !important;
+}
+
+.btn--hover-trans:hover {
+  transform: translateY(-0.7rem);
+}
+
+.button.btn--outline:focus {
+  border: 3px solid #3182ce;
 }
 .button .button__icon {
   display: flex;
@@ -90,17 +117,19 @@ input.btn--full-width {
 input {
   outline: none;
   border: 3px solid #30303d;
-  padding: 1.6rem 2rem;
+  padding: 1.3rem 2rem;
 }
+ion-icon {
+  font-size: 2.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 /*======================== App =======================*/
-.App {
-  background-position: top;
-  background-size: contain;
-  background-repeat: no-repeat;
-}
 .content {
   margin: auto;
-  padding: 7rem 0;
+  padding: 12rem 0;
   max-width: 40rem;
   min-height: 100%;
   display: flex;
