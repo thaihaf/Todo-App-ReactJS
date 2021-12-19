@@ -126,6 +126,8 @@ const CreateTask = ({
     useTaskForm(HandleEditTask);
 
   const closeTabFunc = () => (event) => {
+    values.title = "";
+    setListSelections([]);
     toggleFunc(false)();
   };
 

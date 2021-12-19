@@ -36,10 +36,15 @@ function App() {
   // Function
   const HandleLogin = () => {
     const userTemp = JSON.parse(localStorage.getItem("user"));
-    console.log(userTemp);
 
     setAuthToken(userTemp.token);
     setUser(userTemp);
+
+    setTimeout(() => {
+      localStorage.removeItem("user");
+      setAuthToken();
+      setUser({});
+    }, 3600000);
 
     toast.success("🦄 Loggin successfully!");
     navigate("collections");

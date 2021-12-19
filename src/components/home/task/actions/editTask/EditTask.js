@@ -127,8 +127,10 @@ const EditTask = ({
     }
   };
 
-  const { handleChange, handleSubmit, values, errors } =
-    useTaskForm(HandleEditTask, task);
+  const { handleChange, handleSubmit, values, errors } = useTaskForm(
+    HandleEditTask,
+    task
+  );
 
   const closeTabFunc = () => (event) => {
     toggleFunc(false)();
@@ -199,6 +201,7 @@ const EditTask = ({
                       type="checkbox"
                       className={clsx(classes.editTask__checkbox)}
                       checked={listSelections.find((id) => id === item.id)}
+                      value={true}
                       onChange={handleChangeOption(item.id)}
                     />
                     <span className={clsx(classes.editTask__lable)}>

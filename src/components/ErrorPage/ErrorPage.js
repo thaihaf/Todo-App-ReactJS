@@ -24,7 +24,7 @@ const useStyles = createUseStyles({
 export default function ErrorPage() {
   const classes = useStyles();
 
-  useEffect(() => toast.warn("This page is not available"));
+  toast.warn("This page is not available")
 
   return (
     <div className="content">

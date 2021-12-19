@@ -117,7 +117,7 @@ const AddCollection = ({ toggleFunc, displayVal }) => {
           classes.addCollection__bg,
           "w-100 h-100 position-absolute"
         )}
-        onClick={closeTabFunc(false)}
+        onClick={closeTabFunc}
       ></div>
 
       <div
@@ -130,7 +130,7 @@ const AddCollection = ({ toggleFunc, displayVal }) => {
             </div>
             <div
               className="addCollection__close-btn"
-              onClick={closeTabFunc(false)}
+              onClick={closeTabFunc}
             >
               <ion-icon name="close"></ion-icon>
             </div>
@@ -158,7 +158,7 @@ const AddCollection = ({ toggleFunc, displayVal }) => {
             <div className={clsx(classes.addCollection__title)}>color</div>
 
             <div className={clsx(classes.addCollection__colors, "w-100")}>
-              {listColors.map(function (color) {
+              {listColors.map((color) => {
                 return (
                   <div
                     className={clsx(classes.addCollection__color)}

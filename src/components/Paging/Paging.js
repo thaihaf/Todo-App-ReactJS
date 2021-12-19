@@ -1,7 +1,7 @@
 import React from "react";
 import clsx from "clsx";
 import { createUseStyles } from "react-jss";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { toast } from "react-toastify";
 
 import taskAPI from "../../service/fetchAPI/taskAPI";
@@ -52,39 +52,47 @@ export default function Paging({ data, handleChangeData }) {
   const classes = useStyles();
 
   let [currentPage, setCurrentPage] = useState(data.meta.currentPage);
+  const delayTimeRef = useRef(true);
+  const [val, setVal] = useState(true);
 
-  const handleChange = async (link) => {
+  const handleChange = async (link, value) => {
     try {
-      handleChangeData(
-        await taskAPI().getTasks(link.substring(link.lastIndexOf("/api")))
-      );
+      if (delayTimeRef.current) {
+        setCurrentPage(value);
+        delayTimeRef.current = false;
+        setVal(false);
+
+        handleChangeData(
+          await taskAPI().getTasks(link.substring(link.lastIndexOf("/api")))
+        );
+
+        setTimeout(() => {
+          delayTimeRef.current = true;
+          setVal(true);
+        }, 2500);
+      }
     } catch (error) {
       let errForm = error.message;
       toast.error(errForm);
     }
   };
 
-  const previousBtn = (link) => async () => {
+  const previousBtn = (link) => {
     if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-
-      handleChange(link);
+      handleChange(link, currentPage - 1);
     }
   };
-  const nextBtn = (link) => async () => {
+  const nextBtn = (link) => {
     if (currentPage < data.meta.totalPages) {
-      setCurrentPage(currentPage + 1);
-
-      handleChange(link);
+      handleChange(link, currentPage + 1);
     }
   };
-  const numberBtn = (link, val) => async (e) => {
-    setCurrentPage(val);
-    handleChange(link);
+  const numberBtn = (link, val) => {
+    handleChange(link, val);
   };
   const input = (e) => {
-    let value = e.target.value
-  }
+    let value = e.target.value;
+  };
 
   return (
     <div className={clsx(classes.paging__list)}>
@@ -93,8 +101,9 @@ export default function Paging({ data, handleChangeData }) {
           classes.paging__item,
           classes.paging__chevron,
           data.links.previous == null && classes.paging__item_disabled,
+          !val && classes.paging__item_disabled
         )}
-        onClick={previousBtn(data.links.previous)}
+        onClick={() => previousBtn(data.links.previous)}
         disabled={data.links.previous == null && true}
       >
         <ion-icon
@@ -106,9 +115,10 @@ export default function Paging({ data, handleChangeData }) {
       <button
         className={clsx(
           classes.paging__item,
-          currentPage == 1 ? classes.paging__item_active : ""
+          currentPage == 1 ? classes.paging__item_active : "",
+          !val && classes.paging__item_disabled
         )}
-        onClick={numberBtn(data.links.first, 1)}
+        onClick={() => numberBtn(data.links.first, 1)}
       >
         1
       </button>
@@ -116,13 +126,20 @@ export default function Paging({ data, handleChangeData }) {
       {currentPage > 1 && currentPage < data.meta.totalPages ? (
         <input
           type="text"
-          className={clsx(classes.paging__input, classes.paging__item_active, data.meta.totalPages == 1 && "d-none")}
+          className={clsx(
+            classes.paging__input,
+            classes.paging__item_active,
+            data.meta.totalPages == 1 && "d-none"
+          )}
           value={currentPage}
           readOnly={true}
         />
       ) : (
         <button
-          className={clsx(classes.paging__item, data.meta.totalPages == 1 && "d-none")}
+          className={clsx(
+            classes.paging__item,
+            data.meta.totalPages == 1 && "d-none", !val && classes.paging__item_disabled
+          )}
         >
           ...
         </button>
@@ -131,10 +148,13 @@ export default function Paging({ data, handleChangeData }) {
       <button
         className={clsx(
           classes.paging__item,
-          currentPage == data.meta.totalPages ? classes.paging__item_active : "",
-          data.meta.totalPages == 1 && "d-none"
+          currentPage == data.meta.totalPages
+            ? classes.paging__item_active
+            : "",
+          data.meta.totalPages == 1 && "d-none",
+          !val && classes.paging__item_disabled
         )}
-        onClick={numberBtn(data.links.last, data.meta.totalPages)}
+        onClick={() => numberBtn(data.links.last, data.meta.totalPages)}
       >
         {data.meta ? data.meta.totalPages : ""}
       </button>
@@ -144,8 +164,9 @@ export default function Paging({ data, handleChangeData }) {
           classes.paging__item,
           classes.paging__chevron,
           data.links.next == null && classes.paging__item_disabled,
+          !val && classes.paging__item_disabled
         )}
-        onClick={nextBtn(data.links.next)}
+        onClick={() => nextBtn(data.links.next)}
         disabled={data.links.next == null && true}
       >
         <ion-icon name="chevron-forward"></ion-icon>
