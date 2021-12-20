@@ -2,7 +2,7 @@ import { useState } from "react";
 import IsEmptyObject from "../../../../service/js/IsEmptyObject";
 
 const useTaskForm = (HandleEditTask, task) => {
-  const [values, setValues] = useState({ title: task ? task.title : ""});
+  const [values, setValues] = useState({ title: task ? task.title : "" });
   const [errors, setErrors] = useState({});
 
   const validateInfo = (values) => {
@@ -29,6 +29,7 @@ const useTaskForm = (HandleEditTask, task) => {
     setErrors(errorsTemp);
 
     if (IsEmptyObject(errorsTemp)) {
+      setValues({ title: "" });
       HandleEditTask(values);
     }
   };

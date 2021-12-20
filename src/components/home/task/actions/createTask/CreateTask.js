@@ -112,6 +112,7 @@ const CreateTask = ({
     try {
       const res = await taskAPI().createTask(data);
 
+      setListSelections([]);
       toast.success("🦄 Create Task Successful!");
       toggleFunc(false)();
 
@@ -205,6 +206,7 @@ const CreateTask = ({
                     <input
                       type="checkbox"
                       className={clsx(classes.createTask__checkbox)}
+                      checked={listSelections.find((id) => id === item.id)}
                       onChange={handleChangeOption(item.id)}
                     />
                     <span className={clsx(classes.createTask__lable)}>

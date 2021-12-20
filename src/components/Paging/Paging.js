@@ -68,7 +68,7 @@ export default function Paging({ data, handleChangeData }) {
 
         setTimeout(() => {
           delayTimeRef.current = true;
-          setVal(true);
+          setVal(true); 
         }, 2500);
       }
     } catch (error) {
