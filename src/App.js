@@ -54,7 +54,7 @@ function App() {
   };
 
   useEffect(() => {
-    const expirationDuration = 1000 * 60 * 60; // 1 hours
+    const expirationDuration = 1000 * 60 * 60; // 1 hours 2
     const prevAccepted = localStorage.getItem("accepted");
     const currentTime = new Date().getTime();
 
