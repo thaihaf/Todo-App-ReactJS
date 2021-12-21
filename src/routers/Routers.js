@@ -3,7 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import React from "react";
 
 // components
-import ErrorPage from "../components/ErrorPage/ErrorPage";
+import ErrorPage from "../components/errorPage/ErrorPage";
 import Home from "../components/home/collection/view/Home";
 import ScreenSaver from "../components/screenSaver/ScreenSaver";
 import SignIn from "../components/users/view/signIn/SignIn";

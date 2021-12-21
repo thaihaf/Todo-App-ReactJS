@@ -65,6 +65,8 @@ function UserForm(HandleLogin) {
     try {
       let data = await userAPI().login({ username, password });
       localStorage.setItem("user", JSON.stringify(data));
+      localStorage.setItem("accepted", new Date().getTime());
+
       setErrorForm("");
       HandleLogin();
     } catch (error) {

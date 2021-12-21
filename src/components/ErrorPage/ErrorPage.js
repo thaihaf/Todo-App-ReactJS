@@ -24,8 +24,6 @@ const useStyles = createUseStyles({
 export default function ErrorPage() {
   const classes = useStyles();
 
-  toast.warn("This page is not available")
-
   return (
     <div className="content">
       <div className={clsx(classes.errorPage__title)}>

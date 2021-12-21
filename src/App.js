@@ -40,12 +40,6 @@ function App() {
     setAuthToken(userTemp.token);
     setUser(userTemp);
 
-    setTimeout(() => {
-      localStorage.removeItem("user");
-      setAuthToken();
-      setUser({});
-    }, 3600000);
-
     toast.success("🦄 Loggin successfully!");
     navigate("collections");
   };
@@ -53,15 +47,30 @@ function App() {
     setUser({});
 
     localStorage.removeItem("user");
+    localStorage.removeItem("accepted");
+
     toast.success("🦄 Logout successfully!");
     navigate("users/signIn");
   };
 
   useEffect(() => {
-    const userTemp = JSON.parse(localStorage.getItem("user"));
-    if (userTemp) {
+    const expirationDuration = 1000 * 60 * 60; // 1 hours
+    const prevAccepted = localStorage.getItem("accepted");
+    const currentTime = new Date().getTime();
+
+    const prevAcceptedExpired =
+      prevAccepted && currentTime - prevAccepted < expirationDuration;
+
+    if (prevAcceptedExpired) {
+      const userTemp = JSON.parse(localStorage.getItem("user"));
       setAuthToken(userTemp.token);
       setUser(userTemp);
+    } else {
+      localStorage.removeItem("user");
+      localStorage.removeItem("accepted");
+
+      setAuthToken();
+      setUser({});
     }
   }, []);
 
