@@ -33,6 +33,7 @@ function ScreenSaver() {
   const classes = useStyles();
 
   const user = useSelector(userSelector);
+  console.log(user);
 
   return (
     <div className={classes.ScreenSaver}>

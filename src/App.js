@@ -12,10 +12,10 @@ import Routers from "./routers/Routers";
 
 // Service
 import setAuthToken from "./service/defaultAPI/setAuthToken";
+import userSlice from "./redux/slice/userSlice"
 
 // Css
 import "./App.css";
-import { setUser } from "./redux/actions";
 
 // =================================================================
 const useStyles = createUseStyles({
@@ -43,13 +43,13 @@ function App() {
     if (prevAcceptedExpired) {
       const userTemp = JSON.parse(localStorage.getItem("user"));
       setAuthToken(userTemp.token);
-      dispatch(setUser(userTemp));
+      dispatch(userSlice.actions.setUser(userTemp));
     } else {
       localStorage.removeItem("user");
       localStorage.removeItem("accepted");
 
       setAuthToken();
-      dispatch(setUser({}));
+      dispatch(userSlice.actions.setUser({}));
     }
   }, []);
 

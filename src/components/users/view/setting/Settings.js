@@ -8,7 +8,7 @@ import usePasswordForm from "../../services/usePasswordForm";
 import userAPI from "../../../../service/fetchAPI/userAPI";
 import { useDispatch } from "react-redux";
 import setAuthToken from "../../../../service/defaultAPI/setAuthToken";
-import { setUser } from "../../../../redux/actions";
+import userSlice from "../../../../redux/slice/userSlice";
 
 const useStyles = createUseStyles({
   Settings: {
@@ -113,7 +113,7 @@ const Settings = ({ toggleVal, toggleFunc }) => {
     const userTemp = JSON.parse(localStorage.getItem("user"));
 
     setAuthToken(userTemp.token);
-    dispatch(setUser(userTemp));
+    dispatch(userSlice.actions.setUser(userTemp));
 
     navigate("/collections");
   }

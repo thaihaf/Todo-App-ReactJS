@@ -13,10 +13,9 @@ import DeleteTask from "../actions/deleteTask/DeleteTask";
 
 // services
 import taskAPI from "../../../../service/fetchAPI/taskAPI";
-import collectionAPI from "../../../../service/fetchAPI/collectionsAPI";
 import { useDispatch, useSelector } from "react-redux";
 import { categoriesSelector, dataSelector } from "../../../../redux/selectors";
-import { getData } from "../../../../redux/actions";
+import dataSlice from "../../../../redux/slice/dataSlice";
 
 // Service
 const useStyles = createUseStyles({
@@ -146,7 +145,7 @@ export default function ListTasks() {
   const handleChangeData = (data, type) => {
     type && type === "search" ? setTypeData(type) : setTypeData("");
 
-    dispatch(getData(data));
+    dispatch(dataSlice.actions.getData(data));
   };
 
   return (

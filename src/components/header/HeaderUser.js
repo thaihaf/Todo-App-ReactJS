@@ -9,8 +9,8 @@ import { userSelector } from "../../redux/selectors";
 import Settings from "../users/view/setting/Settings";
 import { useNavigate } from "react-router-dom";
 import setAuthToken from "../../service/defaultAPI/setAuthToken";
-import { setUser } from "../../redux/actions";
 import { toast } from "react-toastify";
+import userSlice from "../../redux/slice/userSlice";
 
 // service
 
@@ -55,7 +55,7 @@ export default function HeaderUser() {
 
   function HandleLogout() {
     setAuthToken();
-    dispatch(setUser({}));
+    dispatch(userSlice.actions.setUser({}));
 
     localStorage.removeItem("user");
     localStorage.removeItem("accepted");

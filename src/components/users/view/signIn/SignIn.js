@@ -10,7 +10,7 @@ import IsEmptyObject from "../../../../service/js/IsEmptyObject";
 import userAPI from "../../../../service/fetchAPI/userAPI";
 import { useDispatch } from "react-redux";
 import setAuthToken from "../../../../service/defaultAPI/setAuthToken";
-import { setUser } from "../../../../redux/actions";
+import userSlice from "../../../../redux/slice/userSlice";
 
 // =================================================================
 const useStyles = createUseStyles({
@@ -125,7 +125,7 @@ export default function SignIn() {
     const userTemp = JSON.parse(localStorage.getItem("user"));
 
     setAuthToken(userTemp.token);
-    await dispatch(setUser(userTemp));
+    await dispatch(userSlice.actions.setUser(userTemp));
 
     toast.success("🦄 Loggin successfully!");
     navigate("/collections");
