@@ -69,7 +69,7 @@ export default function Paging({ data, handleChangeData }) {
         setTimeout(() => {
           delayTimeRef.current = true;
           setVal(true); 
-        }, 2500);
+        }, 1500);
       }
     } catch (error) {
       let errForm = error.message;

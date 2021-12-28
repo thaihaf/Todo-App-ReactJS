@@ -1,10 +1,16 @@
 // lib
-import { useState } from "react";
-import { createUseStyles } from "react-jss";
 import clsx from "clsx";
+import { createUseStyles } from "react-jss";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { userSelector } from "../../redux/selectors";
 
 // components
 import Settings from "../users/view/setting/Settings";
+import { useNavigate } from "react-router-dom";
+import setAuthToken from "../../service/defaultAPI/setAuthToken";
+import { setUser } from "../../redux/actions";
+import { toast } from "react-toastify";
 
 // service
 
@@ -31,7 +37,7 @@ const useStyles = createUseStyles({
     border: "radius 0.7rem",
     color: "var(--text-color-light)",
     backgroundColor: "var(--background-color-header)",
-
+    borderRadius: "1rem",
     "& > *": {
       padding: "1.5rem",
     },
@@ -42,8 +48,23 @@ const useStyles = createUseStyles({
   },
 });
 
-const HeaderUser = ({ HandleLogout, HandleLogin, user }) => {
+export default function HeaderUser() {
   const classes = useStyles();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  function HandleLogout() {
+    setAuthToken();
+    dispatch(setUser({}));
+
+    localStorage.removeItem("user");
+    localStorage.removeItem("accepted");
+
+    toast.success("🦄 Logout successfully!");
+    navigate("users/signIn");
+  }
+
+  const user = useSelector(userSelector);
   const [showUserBar, setshowUserBar] = useState(false);
 
   const [toggleSettingBarVal, setToggleSettingBarVal] = useState(false);
@@ -74,12 +95,17 @@ const HeaderUser = ({ HandleLogout, HandleLogin, user }) => {
           </div>
         </div>
 
-        <div className={classes.settingBar}>
+        <button
+          className={clsx(
+            classes.settingBar,
+            "button btn--none-border btn--full-width btn--none-radius btn--hover-bg-gray m-0 text-left "
+          )}
+        >
           <div className="settingBar__display" onClick={toggleSettingBarFunc}>
             Account Settings
           </div>
           <div className="settingBar__hidden"></div>
-        </div>
+        </button>
 
         <button
           className="signOutBtn button btn--none-border btn--full-width btn--none-radius btn--hover-bg-gray m-0 text-left "
@@ -93,11 +119,7 @@ const HeaderUser = ({ HandleLogout, HandleLogin, user }) => {
       <Settings
         toggleVal={toggleSettingBarVal}
         toggleFunc={toggleSettingBarFunc}
-        HandleLogout={HandleLogout}
-        HandleLogin={HandleLogin}
       />
     </div>
   );
-};
-
-export default HeaderUser;
+}

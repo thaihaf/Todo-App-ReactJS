@@ -14,6 +14,9 @@ import DeleteTask from "../actions/deleteTask/DeleteTask";
 // services
 import taskAPI from "../../../../service/fetchAPI/taskAPI";
 import collectionAPI from "../../../../service/fetchAPI/collectionsAPI";
+import { useDispatch, useSelector } from "react-redux";
+import { categoriesSelector, dataSelector } from "../../../../redux/selectors";
+import { getData } from "../../../../redux/actions";
 
 // Service
 const useStyles = createUseStyles({
@@ -100,6 +103,8 @@ const useActions = () => {
 
 export default function ListTasks() {
   const classes = useStyles();
+  const dispatch = useDispatch();
+
   const {
     toggleAddBar,
     toggleSearchBar,
@@ -110,12 +115,11 @@ export default function ListTasks() {
     // inputSearchRef,
   } = useActions();
 
-  const [data, setData] = useState({});
-  const [listCollections, setListCollections] = useState([]);
+  const data = useSelector(dataSelector);
+  const listCollections = useSelector(categoriesSelector);
   const [typeData, setTypeData] = useState("");
 
   useEffect(async () => {
-    //   get Tasks
     try {
       handleChangeData(await taskAPI().getTasks(`api/tasks?limit=6`));
     } catch (error) {
@@ -123,18 +127,9 @@ export default function ListTasks() {
       toast.error(errForm);
     }
   }, []);
-  useEffect(async () => {
-    //   get Collections
-    try {
-      const res = await collectionAPI().getCollections(`api/categories`);
-      setListCollections(res.items);
-    } catch (error) {
-      let errForm = error.message;
-      toast.error(errForm);
-    }
-  }, []);
 
   const [selectedTasks, setSelectedTasks] = useState([]);
+
   const handleSelectTasks = (id, checked) => {
     let existing = selectedTasks.includes(id);
 
@@ -145,15 +140,13 @@ export default function ListTasks() {
       setSelectedTasks([...selectedTasks, id]);
     }
   };
-
   const handleRemoveTasks = (event) => {
     toggleDeleteBar(!displayDeleteBarVal)();
   };
   const handleChangeData = (data, type) => {
-    if (type === "search") {
-      setTypeData(type);
-    }
-    setData(data);
+    type && type === "search" ? setTypeData(type) : setTypeData("");
+
+    dispatch(getData(data));
   };
 
   return (

@@ -7,6 +7,8 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import axios from "axios";
 import { toast } from "react-toastify";
+import store from "./redux/store";
+import { Provider } from "react-redux";
 
 import FetchClient from "./service/defaultAPI/FetchClient";
 import setAuthToken from "./service/defaultAPI/setAuthToken";
@@ -28,9 +30,11 @@ axios.interceptors.response.use(
 
 ReactDOM.render(
   <React.StrictMode>
-    <Router>
-      <App />
-    </Router>
+    <Provider store={store}>
+      <Router>
+        <App />
+      </Router>
+    </Provider>
   </React.StrictMode>,
   document.getElementById("root")
 );

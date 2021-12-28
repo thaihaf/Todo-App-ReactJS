@@ -8,6 +8,9 @@ import Collection from "./Collection";
 import AddCollection from "../actions/addCollection/AddCollection";
 
 import collectionAPI from "../../../../service/fetchAPI/collectionsAPI";
+import { useDispatch, useSelector } from "react-redux";
+import { categoriesSelector } from "../../../../redux/selectors";
+import { getCategories } from "../../../../redux/actions";
 
 const useStyles = createUseStyles({
   home__title: {
@@ -33,12 +36,14 @@ const useStyles = createUseStyles({
 
 export default function Home() {
   const classes = useStyles();
-  const [collections, setCollections] = useState([]);
+  const dispatch = useDispatch();
+
+  const collections = useSelector(categoriesSelector);
   const [addCollDisplayVal, setAddCollDisplayVal] = useState(false);
 
   useEffect(async () => {
     const res = await collectionAPI().getCollections(`api/categories?limit=8`);
-    setCollections(res.items);
+    dispatch(getCategories(res.items));
   }, []);
 
   const toggleAddCollDisplayVal = (value) => (event) => {

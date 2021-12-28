@@ -104,7 +104,7 @@ const CreateTask = ({
 
   const [listSelections, setListSelections] = useState([]);
 
-  const HandleEditTask = async (values) => {
+  const HandleCreateTask = async (values) => {
     let title = values.title;
     let categoryIds = listSelections;
     let data = { title, categoryIds };
@@ -123,11 +123,11 @@ const CreateTask = ({
     }
   };
 
-  const { handleChange, handleSubmit, values, errors } =
-    useTaskForm(HandleEditTask);
+  const { handleChange, handleSubmit, setEmptyValues, values, errors } =
+    useTaskForm("create", HandleCreateTask);
 
   const closeTabFunc = () => (event) => {
-    values.title = "";
+    setEmptyValues();
     setListSelections([]);
     toggleFunc(false)();
   };
