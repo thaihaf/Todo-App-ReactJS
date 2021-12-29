@@ -5,6 +5,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import taskAPI from "../../../../../service/fetchAPI/taskAPI";
 import useTaskForm from "../../services/useTaskForm";
+import { getData } from "../../../../../redux/slice/dataSlice";
 
 const useStyles = createUseStyles({
   EditTask: {
@@ -120,7 +121,7 @@ const EditTask = ({
       toast.success("🦄 Update Task Successful!");
       toggleFunc(false)();
 
-      handleChangeData(await taskAPI().getTasks(`api/tasks?limit=6`));
+      handleChangeData(getData());
     } catch (error) {
       let errForm = error.message;
       toast.error(errForm);

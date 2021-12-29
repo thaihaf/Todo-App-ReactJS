@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import useTaskForm from "../../services/useTaskForm";
 
 import taskAPI from "../../../../../service/fetchAPI/taskAPI";
+import { getData } from "../../../../../redux/slice/dataSlice";
 
 const useStyles = createUseStyles({
   CreateTask: {
@@ -116,7 +117,7 @@ const CreateTask = ({
       toast.success("🦄 Create Task Successful!");
       toggleFunc(false)();
 
-      handleChangeData(await taskAPI().getTasks(`api/tasks?limit=6`));
+      handleChangeData(getData());
     } catch (error) {
       let errForm = error.message;
       toast.error(errForm);
