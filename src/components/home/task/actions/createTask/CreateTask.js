@@ -110,7 +110,7 @@ const CreateTask = ({
     let data = { title, categoryIds };
 
     try {
-      const res = await taskAPI().createTask(data);
+       await taskAPI().createTask(data);
 
       setListSelections([]);
       toast.success("🦄 Create Task Successful!");

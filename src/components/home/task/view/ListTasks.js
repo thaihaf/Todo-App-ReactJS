@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { createUseStyles } from "react-jss";
 import clsx from "clsx";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 
 // Component
 import Task from "./Task";
@@ -12,10 +12,10 @@ import SearchTasks from "../actions/searchTasks/SearchTasks";
 import DeleteTask from "../actions/deleteTask/DeleteTask";
 
 // services
-import taskAPI from "../../../../service/fetchAPI/taskAPI";
 import { useDispatch, useSelector } from "react-redux";
 import { categoriesSelector, dataSelector } from "../../../../redux/selectors";
-import dataSlice from "../../../../redux/slice/dataSlice";
+import  { getData } from "../../../../redux/slice/dataSlice";
+// import { unwrapResult } from "@reduxjs/toolkit";
 
 // Service
 const useStyles = createUseStyles({
@@ -118,13 +118,8 @@ export default function ListTasks() {
   const listCollections = useSelector(categoriesSelector);
   const [typeData, setTypeData] = useState("");
 
-  useEffect(async () => {
-    try {
-      handleChangeData(await taskAPI().getTasks(`api/tasks?limit=6`));
-    } catch (error) {
-      let errForm = error.message;
-      toast.error(errForm);
-    }
+  useEffect(() => {
+    handleChangeData(getData());
   }, []);
 
   const [selectedTasks, setSelectedTasks] = useState([]);
@@ -142,10 +137,10 @@ export default function ListTasks() {
   const handleRemoveTasks = (event) => {
     toggleDeleteBar(!displayDeleteBarVal)();
   };
-  const handleChangeData = (data, type) => {
+  const handleChangeData = async (data, type) => {
     type && type === "search" ? setTypeData(type) : setTypeData("");
-
-    dispatch(dataSlice.actions.getData(data));
+    await dispatch(data);
+    // console.log(unwrapResult(await dispatch(data)))
   };
 
   return (
@@ -209,8 +204,8 @@ export default function ListTasks() {
 
         {data &&
           data.meta &&
-          data.meta.totalItems == 0 &&
-          (typeData == "search" ? (
+          data.meta.totalItems === 0 &&
+          (typeData === "search" ? (
             <div
               style={{
                 fontSize: "1.5rem",

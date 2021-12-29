@@ -34,7 +34,7 @@ const useTaskForm = (type, HandleEditTask, task) => {
 
     if (IsEmptyObject(errorsTemp)) {
       HandleEditTask(values);
-      if (type == "create") {
+      if (type === "create") {
         setEmptyValues();
       }
     }

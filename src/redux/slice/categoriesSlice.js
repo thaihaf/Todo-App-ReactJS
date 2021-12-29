@@ -1,32 +1,33 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { toast } from "react-toastify";
+import collectionAPI from "../../service/fetchAPI/collectionsAPI";
+
+export const getCategories = createAsyncThunk(
+  "categories/getCategories",
+  async () => {
+    try {
+      const response = await collectionAPI().getCollections(
+        `api/categories?limit=8`
+      );
+      return response.items;
+    } catch (err) {
+      toast.error(err.message);
+    }
+  }
+);
 
 export default createSlice({
   name: "categories",
   initialState: {
     categories: [],
   },
-  reducers: {
-    getCategories: (state, action) => {
+  reducers: {},
+  extraReducers: {
+    [getCategories.fulfilled]: (state, action) => {
       state.categories = action.payload;
-    } /*  => { type : "categories/getCategories" } */,
+    },
+    [getCategories.rejected]: (state, action) => {
+      state.categories = [];
+    },
   },
 });
-
-// const initialState = {
-//   categories: [],
-// };
-
-// const CategoriesReducer = (state = initialState, action) => {
-//   switch (action.type) {
-//     case "categories/getCategories": {
-//       return {
-//         categories: action.payload,
-//       };
-//     }
-
-//     default:
-//       return state;
-//   }
-// };
-
-// export default CategoriesReducer;

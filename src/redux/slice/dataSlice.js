@@ -1,32 +1,28 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { toast } from "react-toastify";
+import taskAPI from "../../service/fetchAPI/taskAPI";
+
+export const getData = createAsyncThunk("data/getData", async () => {
+  try {
+    const response = await taskAPI().getTasks(`api/tasks?limit=6`);
+    return response;
+  } catch (err) {
+    toast.error(err.message);
+  }
+});
 
 export default createSlice({
   name: "data",
   initialState: {
     data: [],
   },
-  reducers: {
-    getData: (state, action) => {
+  reducers: {},
+  extraReducers: {
+    [getData.fulfilled]: (state, action) => {
       state.data = action.payload;
+    },
+    [getData.rejected]: (state, action) => {
+      state.data = [];
     },
   },
 });
-
-// const initialState = {
-//   data: {},
-// };
-
-// const DataReducer = (state = initialState, action) => {
-//   switch (action.type) {
-//     case "data/getData": {
-//       return {
-//         data: action.payload,
-//       };
-//     }
-
-//     default:
-//       return state;
-//   }
-// };
-
-// export default DataReducer;

@@ -91,7 +91,7 @@ export default function Paging({ data, handleChangeData }) {
     handleChange(link, val);
   };
   const input = (e) => {
-    let value = e.target.value;
+    // let value = e.target.value;
   };
 
   return (
@@ -115,7 +115,7 @@ export default function Paging({ data, handleChangeData }) {
       <button
         className={clsx(
           classes.paging__item,
-          currentPage == 1 ? classes.paging__item_active : "",
+          currentPage === 1 ? classes.paging__item_active : "",
           !val && classes.paging__item_disabled
         )}
         onClick={() => numberBtn(data.links.first, 1)}
@@ -129,7 +129,7 @@ export default function Paging({ data, handleChangeData }) {
           className={clsx(
             classes.paging__input,
             classes.paging__item_active,
-            data.meta.totalPages == 1 && "d-none"
+            data.meta.totalPages === 1 && "d-none"
           )}
           value={currentPage}
           readOnly={true}
@@ -138,7 +138,7 @@ export default function Paging({ data, handleChangeData }) {
         <button
           className={clsx(
             classes.paging__item,
-            data.meta.totalPages == 1 && "d-none", !val && classes.paging__item_disabled
+            data.meta.totalPages === 1 && "d-none", !val && classes.paging__item_disabled
           )}
         >
           ...
@@ -148,10 +148,10 @@ export default function Paging({ data, handleChangeData }) {
       <button
         className={clsx(
           classes.paging__item,
-          currentPage == data.meta.totalPages
+          currentPage === data.meta.totalPages
             ? classes.paging__item_active
             : "",
-          data.meta.totalPages == 1 && "d-none",
+          data.meta.totalPages === 1 && "d-none",
           !val && classes.paging__item_disabled
         )}
         onClick={() => numberBtn(data.links.last, data.meta.totalPages)}

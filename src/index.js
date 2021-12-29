@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 import store from "./redux/store";
 import { Provider } from "react-redux";
 
-import FetchClient from "./service/defaultAPI/FetchClient";
+// import FetchClient from "./service/defaultAPI/FetchClient";
 import setAuthToken from "./service/defaultAPI/setAuthToken";
 
 setAuthToken();
@@ -20,7 +20,7 @@ axios.interceptors.response.use(
     return response;
   },
   function (error) {
-    if (error.response.status == 401) {
+    if (error.response.status === 401) {
       toast.warn("This token is invalidated");
       localStorage.removeItem("user");
     }

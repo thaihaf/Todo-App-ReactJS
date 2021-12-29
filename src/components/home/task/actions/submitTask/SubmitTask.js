@@ -72,7 +72,7 @@ const SubmitTask = ({ task, toggleFunc, displayVal, handleChangeData }) => {
     let data = { title, categoryIds, status };
 
     try {
-      const res = await taskAPI().updateTask(task.id, data);
+      await taskAPI().updateTask(task.id, data);
 
       toast.success("🦄 Submit Task Successful!");
       toggleFunc(false)();
