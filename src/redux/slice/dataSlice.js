@@ -21,7 +21,7 @@ export default createSlice({
     [getData.fulfilled]: (state, action) => {
       state.data = action.payload;
     },
-    [getData.rejected]: (state, action) => {
+    [getData.rejected]: (state) => {
       state.data = [];
     },
   },

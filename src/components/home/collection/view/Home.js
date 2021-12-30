@@ -10,7 +10,6 @@ import AddCollection from "../actions/addCollection/AddCollection";
 import { useDispatch, useSelector } from "react-redux";
 import { categoriesSelector } from "../../../../redux/selectors";
 import { getCategories } from "../../../../redux/slice/categoriesSlice";
-// import { unwrapResult } from "@reduxjs/toolkit";
 
 const useStyles = createUseStyles({
   home__title: {
@@ -42,10 +41,7 @@ export default function Home() {
   const [addCollDisplayVal, setAddCollDisplayVal] = useState(false);
 
   useEffect(() => {
-    async function fetchData() {
-      await dispatch(getCategories());
-    }
-    fetchData();
+    dispatch(getCategories());
   }, []);
 
   const toggleAddCollDisplayVal = (value) => (event) => {

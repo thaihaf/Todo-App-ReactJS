@@ -2,7 +2,6 @@
 import { useState, useEffect } from "react";
 import { createUseStyles } from "react-jss";
 import clsx from "clsx";
-// import { toast } from "react-toastify";
 
 // Component
 import Task from "./Task";
@@ -14,8 +13,7 @@ import DeleteTask from "../actions/deleteTask/DeleteTask";
 // services
 import { useDispatch, useSelector } from "react-redux";
 import { categoriesSelector, dataSelector } from "../../../../redux/selectors";
-import  { getData } from "../../../../redux/slice/dataSlice";
-// import { unwrapResult } from "@reduxjs/toolkit";
+import { getData } from "../../../../redux/slice/dataSlice";
 
 // Service
 const useStyles = createUseStyles({
@@ -75,15 +73,10 @@ const useActions = () => {
   const [displaySearchBarVal, setDisplaySearchBarVal] = useState(false);
   const [displayDeleteBarVal, setDisplayDeleteBarVal] = useState(false);
 
-  // const inputSearchRef = useRef();
-
   const toggleAddBar = (value) => (event) => {
     setDisplayAddBarVal(value);
   };
   const toggleSearchBar = (value) => (event) => {
-    // if (inputSearchRef.current) {
-    //   inputSearchRef.current.focus();
-    // }
     setDisplaySearchBarVal(value);
   };
   const toggleDeleteBar = (value) => (event) => {
@@ -96,7 +89,6 @@ const useActions = () => {
     displayAddBarVal,
     displaySearchBarVal,
     displayDeleteBarVal,
-    // inputSearchRef,
   };
 };
 
@@ -111,7 +103,6 @@ export default function ListTasks() {
     displayAddBarVal,
     displaySearchBarVal,
     displayDeleteBarVal,
-    // inputSearchRef,
   } = useActions();
 
   const data = useSelector(dataSelector);
@@ -137,10 +128,9 @@ export default function ListTasks() {
   const handleRemoveTasks = (event) => {
     toggleDeleteBar(!displayDeleteBarVal)();
   };
-  const handleChangeData = async (data, type) => {
+  const handleChangeData = (data, type) => {
     type && type === "search" ? setTypeData(type) : setTypeData("");
-    await dispatch(data);
-    // console.log(unwrapResult(await dispatch(data)))
+    dispatch(data);
   };
 
   return (
@@ -161,7 +151,6 @@ export default function ListTasks() {
           >
             <SearchTasks
               displayVal={displaySearchBarVal}
-              // inputSearchRef={inputSearchRef}
               listTasks={data.items}
               handleChangeData={handleChangeData}
             />
