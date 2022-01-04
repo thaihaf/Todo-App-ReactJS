@@ -1,6 +1,8 @@
 // lib
 import { createUseStyles } from "react-jss";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { userSelector } from "../../redux/selectors";
 
 // Component
 
@@ -27,8 +29,10 @@ const useStyles = createUseStyles({
   },
 });
 
-function ScreenSaver({ user }) {
+function ScreenSaver() {
   const classes = useStyles();
+
+  const user = useSelector(userSelector);
 
   return (
     <div className={classes.ScreenSaver}>

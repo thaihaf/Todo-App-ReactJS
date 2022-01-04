@@ -3,6 +3,7 @@ import { createUseStyles } from "react-jss";
 import clsx from "clsx";
 import { toast } from "react-toastify";
 import taskAPI from "../../../../../service/fetchAPI/taskAPI";
+import { getData } from "../../../../../redux/slice/dataSlice";
 
 const useStyles = createUseStyles({
   DeleteTask: {
@@ -67,11 +68,11 @@ const DeleteTask = ({ taskIDs, toggleFunc, displayVal, handleChangeData }) => {
       if (typeof taskIDs === "object") {
         taskIDs.forEach(async (taskID) => {
           await taskAPI().deleteTask(taskID);
-          handleChangeData(await taskAPI().getTasks(`api/tasks?limit=6`));
+          handleChangeData(getData());
         });
       } else {
         await taskAPI().deleteTask(taskIDs);
-        handleChangeData(await taskAPI().getTasks(`api/tasks?limit=6`));
+        handleChangeData(getData());
       }
 
       toggleFunc(false)();

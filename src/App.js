@@ -1,17 +1,18 @@
 // lib
 import React from "react";
 import { createUseStyles } from "react-jss";
-import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { ToastContainer, Bounce } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 // Component
 import Header from "./components/header/Header";
 import Routers from "./routers/Routers";
 
-import { ToastContainer, toast, Bounce } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 // Service
 import setAuthToken from "./service/defaultAPI/setAuthToken";
+import userSlice from "./redux/slice/userSlice"
 
 // Css
 import "./App.css";
@@ -28,30 +29,8 @@ const useStyles = createUseStyles({
 });
 
 function App() {
-  const navigate = useNavigate();
   const classes = useStyles();
-
-  const [user, setUser] = useState({});
-
-  // Function
-  const HandleLogin = () => {
-    const userTemp = JSON.parse(localStorage.getItem("user"));
-
-    setAuthToken(userTemp.token);
-    setUser(userTemp);
-
-    toast.success("🦄 Loggin successfully!");
-    navigate("collections");
-  };
-  const HandleLogout = () => {
-    setUser({});
-
-    localStorage.removeItem("user");
-    localStorage.removeItem("accepted");
-
-    toast.success("🦄 Logout successfully!");
-    navigate("users/signIn");
-  };
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const expirationDuration = 1000 * 60 * 60; // 1 hours 2
@@ -64,23 +43,19 @@ function App() {
     if (prevAcceptedExpired) {
       const userTemp = JSON.parse(localStorage.getItem("user"));
       setAuthToken(userTemp.token);
-      setUser(userTemp);
+      dispatch(userSlice.actions.setUser(userTemp));
     } else {
       localStorage.removeItem("user");
       localStorage.removeItem("accepted");
 
       setAuthToken();
-      setUser({});
+      dispatch(userSlice.actions.setUser({}));
     }
   }, []);
 
   return (
     <div className={classes.App}>
-      <Header
-        HandleLogout={HandleLogout}
-        HandleLogin={HandleLogin}
-        user={user}
-      />
+      <Header />
       <ToastContainer
         position="top-center"
         autoClose={5000}
@@ -95,7 +70,7 @@ function App() {
         style={{ fontSize: "1.4rem" }}
       />
 
-      <Routers HandleLogin={HandleLogin} user={user} />
+      <Routers />
     </div>
   );
 }

@@ -4,6 +4,7 @@ import clsx from "clsx";
 import { toast } from "react-toastify";
 
 import taskAPI from "../../../../../service/fetchAPI/taskAPI";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 
 const useStyles = createUseStyles({
   searchTasks__bar: {
@@ -60,10 +61,18 @@ export default function SearchTask({
         //   task.title.includes(searchVal)
         // );
         // handleChangeData(filteredTasks, "search");
-        const res = await taskAPI().getTasks(
-          `api/tasks?limit=6&page=1&search=${value}`
-        );
-        handleChangeData(res, "search");
+        const getData = createAsyncThunk("data/getData", async () => {
+          try {
+            const response = await taskAPI().getTasks(
+              `api/tasks?limit=6&page=1&search=${value}`
+            );
+            return response;
+          } catch (err) {
+            toast.error(err.message);
+          }
+        });
+
+        handleChangeData(getData(), "search");
       } catch (error) {
         let errForm = error.message;
         toast.error(errForm);

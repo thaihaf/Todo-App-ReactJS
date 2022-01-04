@@ -7,7 +7,9 @@ import clsx from "clsx";
 import Collection from "./Collection";
 import AddCollection from "../actions/addCollection/AddCollection";
 
-import collectionAPI from "../../../../service/fetchAPI/collectionsAPI";
+import { useDispatch, useSelector } from "react-redux";
+import { categoriesSelector } from "../../../../redux/selectors";
+import { getCategories } from "../../../../redux/slice/categoriesSlice";
 
 const useStyles = createUseStyles({
   home__title: {
@@ -33,12 +35,13 @@ const useStyles = createUseStyles({
 
 export default function Home() {
   const classes = useStyles();
-  const [collections, setCollections] = useState([]);
+  const dispatch = useDispatch();
+
+  const collections = useSelector(categoriesSelector);
   const [addCollDisplayVal, setAddCollDisplayVal] = useState(false);
 
-  useEffect(async () => {
-    const res = await collectionAPI().getCollections(`api/categories?limit=8`);
-    setCollections(res.items);
+  useEffect(() => {
+    dispatch(getCategories());
   }, []);
 
   const toggleAddCollDisplayVal = (value) => (event) => {
@@ -65,7 +68,7 @@ export default function Home() {
           <div
             className={clsx(
               classes.home__title,
-              collections.length == 0 ? "w-100" : ""
+              collections.length === 0 ? "w-100" : ""
             )}
           >
             {collections.length > 0
@@ -82,7 +85,7 @@ export default function Home() {
             <button
               className={clsx(
                 classes.home__action,
-                collections.length == 0 ? "d-none" : "",
+                collections.length === 0 ? "d-none" : "",
                 "searchCollection button btn--flex btn--bg-gray btn--border btn--hover-bg-gray"
               )}
             >

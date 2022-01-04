@@ -1,7 +1,9 @@
 // lib
+import clsx from "clsx";
 import { createUseStyles } from "react-jss";
 import { Link } from "react-router-dom";
-import clsx from "clsx";
+import { useSelector } from "react-redux";
+import { userSelector } from "../../redux/selectors";
 
 // components
 import HeaderUser from "./HeaderUser";
@@ -28,8 +30,10 @@ const useStyles = createUseStyles({
   },
 });
 
-export default function Header({ HandleLogout, HandleLogin, user }) {
+export default function Header() {
   const classes = useStyles();
+
+  const user = useSelector(userSelector);
 
   return (
     <div
@@ -60,11 +64,7 @@ export default function Header({ HandleLogout, HandleLogin, user }) {
       )}
 
       {user.username ? (
-        <HeaderUser
-          HandleLogout={HandleLogout}
-          HandleLogin={HandleLogin}
-          user={user}
-        />
+        <HeaderUser />
       ) : (
         <div className={clsx("ml-auto btns--flex")}>
           <Link to="users/signIn">

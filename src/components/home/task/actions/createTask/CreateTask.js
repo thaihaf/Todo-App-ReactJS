@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import useTaskForm from "../../services/useTaskForm";
 
 import taskAPI from "../../../../../service/fetchAPI/taskAPI";
+import { getData } from "../../../../../redux/slice/dataSlice";
 
 const useStyles = createUseStyles({
   CreateTask: {
@@ -104,30 +105,30 @@ const CreateTask = ({
 
   const [listSelections, setListSelections] = useState([]);
 
-  const HandleEditTask = async (values) => {
+  const HandleCreateTask = async (values) => {
     let title = values.title;
     let categoryIds = listSelections;
     let data = { title, categoryIds };
 
     try {
-      const res = await taskAPI().createTask(data);
+       await taskAPI().createTask(data);
 
       setListSelections([]);
       toast.success("🦄 Create Task Successful!");
       toggleFunc(false)();
 
-      handleChangeData(await taskAPI().getTasks(`api/tasks?limit=6`));
+      handleChangeData(getData());
     } catch (error) {
       let errForm = error.message;
       toast.error(errForm);
     }
   };
 
-  const { handleChange, handleSubmit, values, errors } =
-    useTaskForm(HandleEditTask);
+  const { handleChange, handleSubmit, setEmptyValues, values, errors } =
+    useTaskForm("create", HandleCreateTask);
 
   const closeTabFunc = () => (event) => {
-    values.title = "";
+    setEmptyValues();
     setListSelections([]);
     toggleFunc(false)();
   };

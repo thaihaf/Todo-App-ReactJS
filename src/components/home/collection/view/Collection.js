@@ -39,8 +39,6 @@ const useStyles = createUseStyles({
 export default function Collection({ collection }) {
   const classes = useStyles();
 
-  const linkToTask = () => (event) => {};
-
   return (
     <Link to={`/collection/${collection.id}`}>
       <div

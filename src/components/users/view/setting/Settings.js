@@ -6,7 +6,10 @@ import { useNavigate } from "react-router-dom";
 
 import usePasswordForm from "../../services/usePasswordForm";
 import userAPI from "../../../../service/fetchAPI/userAPI";
+import { useDispatch } from "react-redux";
 import setAuthToken from "../../../../service/defaultAPI/setAuthToken";
+import userSlice from "../../../../redux/slice/userSlice";
+
 const useStyles = createUseStyles({
   Settings: {
     top: "0",
@@ -101,9 +104,19 @@ const useStyles = createUseStyles({
   },
 });
 
-const Settings = ({ toggleVal, toggleFunc, HandleLogin }) => {
-  const navigate = useNavigate();
+const Settings = ({ toggleVal, toggleFunc }) => {
   const classes = useStyles();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  async function HandleLogin() {
+    const userTemp = JSON.parse(localStorage.getItem("user"));
+
+    setAuthToken(userTemp.token);
+    dispatch(userSlice.actions.setUser(userTemp));
+
+    navigate("/collections");
+  }
 
   const HandleChangePassword = async (values, user) => {
     let id = user.id;
@@ -116,26 +129,25 @@ const Settings = ({ toggleVal, toggleFunc, HandleLogin }) => {
       toast.success("🦄 Change password successfully!");
       toggleFunc();
 
-      setTimeout(async () => {
-        localStorage.setItem(
-          "user",
-          JSON.stringify(await userAPI().login({ username, password }))
-        );
+      localStorage.setItem(
+        "user",
+        JSON.stringify(await userAPI().login({ username, password }))
+      );
 
-        navigate("/");
-        HandleLogin();
-      }, 1000);
+      navigate("/");
+      await HandleLogin();
     } catch (error) {
       let errForm = error.message;
       toast.error(errForm);
     }
   };
 
-  const { handleChange, handleSubmit, values, errors } =
+  const { handleChange, handleSubmit, setEmptyValues, values, errors } =
     usePasswordForm(HandleChangePassword);
 
   const closeTabFunc = () => {
     toggleFunc();
+    setEmptyValues();
   };
 
   return (
@@ -184,7 +196,7 @@ const Settings = ({ toggleVal, toggleFunc, HandleLogin }) => {
             <div className={clsx(classes.settings__group, "bar-title")}>
               <div className={clsx(classes.settings__title)}>New Password</div>
               <input
-                type="text"
+                type="password"
                 placeholder="new password"
                 className="btn--outline w-100 py-3"
                 style={{ fontSize: "1.6rem" }}
@@ -201,7 +213,7 @@ const Settings = ({ toggleVal, toggleFunc, HandleLogin }) => {
             <div className={clsx(classes.settings__group, "bar-title")}>
               <div className={clsx(classes.settings__title)}>Re-Password</div>
               <input
-                type="text"
+                type="password"
                 placeholder="re-password"
                 className="btn--outline w-100 py-3"
                 style={{ fontSize: "1.6rem" }}

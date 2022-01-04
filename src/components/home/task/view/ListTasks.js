@@ -2,7 +2,6 @@
 import { useState, useEffect } from "react";
 import { createUseStyles } from "react-jss";
 import clsx from "clsx";
-import { toast } from "react-toastify";
 
 // Component
 import Task from "./Task";
@@ -12,8 +11,9 @@ import SearchTasks from "../actions/searchTasks/SearchTasks";
 import DeleteTask from "../actions/deleteTask/DeleteTask";
 
 // services
-import taskAPI from "../../../../service/fetchAPI/taskAPI";
-import collectionAPI from "../../../../service/fetchAPI/collectionsAPI";
+import { useDispatch, useSelector } from "react-redux";
+import { categoriesSelector, dataSelector } from "../../../../redux/selectors";
+import { getData } from "../../../../redux/slice/dataSlice";
 
 // Service
 const useStyles = createUseStyles({
@@ -73,15 +73,10 @@ const useActions = () => {
   const [displaySearchBarVal, setDisplaySearchBarVal] = useState(false);
   const [displayDeleteBarVal, setDisplayDeleteBarVal] = useState(false);
 
-  // const inputSearchRef = useRef();
-
   const toggleAddBar = (value) => (event) => {
     setDisplayAddBarVal(value);
   };
   const toggleSearchBar = (value) => (event) => {
-    // if (inputSearchRef.current) {
-    //   inputSearchRef.current.focus();
-    // }
     setDisplaySearchBarVal(value);
   };
   const toggleDeleteBar = (value) => (event) => {
@@ -94,12 +89,13 @@ const useActions = () => {
     displayAddBarVal,
     displaySearchBarVal,
     displayDeleteBarVal,
-    // inputSearchRef,
   };
 };
 
 export default function ListTasks() {
   const classes = useStyles();
+  const dispatch = useDispatch();
+
   const {
     toggleAddBar,
     toggleSearchBar,
@@ -107,34 +103,18 @@ export default function ListTasks() {
     displayAddBarVal,
     displaySearchBarVal,
     displayDeleteBarVal,
-    // inputSearchRef,
   } = useActions();
 
-  const [data, setData] = useState({});
-  const [listCollections, setListCollections] = useState([]);
+  const data = useSelector(dataSelector);
+  const listCollections = useSelector(categoriesSelector);
   const [typeData, setTypeData] = useState("");
 
-  useEffect(async () => {
-    //   get Tasks
-    try {
-      handleChangeData(await taskAPI().getTasks(`api/tasks?limit=6`));
-    } catch (error) {
-      let errForm = error.message;
-      toast.error(errForm);
-    }
-  }, []);
-  useEffect(async () => {
-    //   get Collections
-    try {
-      const res = await collectionAPI().getCollections(`api/categories`);
-      setListCollections(res.items);
-    } catch (error) {
-      let errForm = error.message;
-      toast.error(errForm);
-    }
+  useEffect(() => {
+    handleChangeData(getData());
   }, []);
 
   const [selectedTasks, setSelectedTasks] = useState([]);
+
   const handleSelectTasks = (id, checked) => {
     let existing = selectedTasks.includes(id);
 
@@ -145,15 +125,12 @@ export default function ListTasks() {
       setSelectedTasks([...selectedTasks, id]);
     }
   };
-
   const handleRemoveTasks = (event) => {
     toggleDeleteBar(!displayDeleteBarVal)();
   };
   const handleChangeData = (data, type) => {
-    if (type === "search") {
-      setTypeData(type);
-    }
-    setData(data);
+    type && type === "search" ? setTypeData(type) : setTypeData("");
+    dispatch(data);
   };
 
   return (
@@ -174,7 +151,6 @@ export default function ListTasks() {
           >
             <SearchTasks
               displayVal={displaySearchBarVal}
-              // inputSearchRef={inputSearchRef}
               listTasks={data.items}
               handleChangeData={handleChangeData}
             />
@@ -217,8 +193,8 @@ export default function ListTasks() {
 
         {data &&
           data.meta &&
-          data.meta.totalItems == 0 &&
-          (typeData == "search" ? (
+          data.meta.totalItems === 0 &&
+          (typeData === "search" ? (
             <div
               style={{
                 fontSize: "1.5rem",

@@ -10,6 +10,11 @@ const useTaskForm = (HandleChangePassword) => {
   });
   const [errors, setErrors] = useState({});
 
+  const setEmptyValues = () => {
+    setErrors({});
+    setValues({});
+  };
+
   const validateInfo = (values) => {
     let errors = {};
 
@@ -67,7 +72,7 @@ const useTaskForm = (HandleChangePassword) => {
     }
   };
 
-  return { handleChange, handleSubmit, values, errors };
+  return { handleChange, handleSubmit, setEmptyValues,values, errors };
 };
 
 export default useTaskForm;

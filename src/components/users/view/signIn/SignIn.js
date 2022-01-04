@@ -1,6 +1,6 @@
 // lib
 import { createUseStyles } from "react-jss";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import clsx from "clsx";
 import { toast } from "react-toastify";
@@ -8,6 +8,9 @@ import { toast } from "react-toastify";
 // Component
 import IsEmptyObject from "../../../../service/js/IsEmptyObject";
 import userAPI from "../../../../service/fetchAPI/userAPI";
+import { useDispatch } from "react-redux";
+import setAuthToken from "../../../../service/defaultAPI/setAuthToken";
+import userSlice from "../../../../redux/slice/userSlice";
 
 // =================================================================
 const useStyles = createUseStyles({
@@ -113,8 +116,21 @@ function validateInfo(values) {
   return errors;
 }
 
-export default function SignIn({ HandleLogin }) {
+export default function SignIn() {
   const classes = useStyles();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  async function HandleLogin() {
+    const userTemp = JSON.parse(localStorage.getItem("user"));
+
+    setAuthToken(userTemp.token);
+    await dispatch(userSlice.actions.setUser(userTemp));
+
+    toast.success("🦄 Loggin successfully!");
+    navigate("/collections");
+  }
+
   const { handleChange, details, handleSubmit, errors, errorForm } =
     UserForm(HandleLogin);
 
