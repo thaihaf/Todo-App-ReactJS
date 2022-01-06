@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
-import collectionAPI from "../../service/fetchAPI/collectionsAPI";
+import collectionAPI from "../../untils/fetchAPI/collectionsAPI";
 
 export const getCategories = createAsyncThunk(
   "categories/getCategories",

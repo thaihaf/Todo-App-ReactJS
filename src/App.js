@@ -1,5 +1,5 @@
 // lib
-import React from "react";
+import React, { useState } from "react";
 import { createUseStyles } from "react-jss";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
@@ -7,15 +7,13 @@ import { ToastContainer, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 // Component
-import Header from "./components/header/Header";
+import Header from "./components/Header";
 import Routers from "./routers/Routers";
-
-// Service
-import setAuthToken from "./service/defaultAPI/setAuthToken";
-import userSlice from "./redux/slice/userSlice"
 
 // Css
 import "./App.css";
+import setAuthToken from "./untils/defaultAPI/setAuthToken";
+import userSlice from "./redux/slice/userSlice";
 
 // =================================================================
 const useStyles = createUseStyles({
@@ -31,17 +29,21 @@ const useStyles = createUseStyles({
 function App() {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const [timer, setTimer] = useState(() => {
+    return 1000 * 60 * 60;
+  });
 
   useEffect(() => {
-    const expirationDuration = 1000 * 60 * 60; // 1 hours 2
+    const expirationDuration = timer; // 1 hours 2
     const prevAccepted = localStorage.getItem("accepted");
     const currentTime = new Date().getTime();
 
     const prevAcceptedExpired =
       prevAccepted && currentTime - prevAccepted < expirationDuration;
 
-    if (prevAcceptedExpired) {
-      const userTemp = JSON.parse(localStorage.getItem("user"));
+    const userTemp = JSON.parse(localStorage.getItem("user"));
+
+    if (prevAcceptedExpired && userTemp) {
       setAuthToken(userTemp.token);
       dispatch(userSlice.actions.setUser(userTemp));
     } else {

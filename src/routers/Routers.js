@@ -5,12 +5,12 @@ import { userSelector } from "../redux/selectors";
 import { Routes, Route } from "react-router-dom";
 
 // components
-import ErrorPage from "../components/ErrorPage/ErrorPage";
-import Home from "../components/home/collection/view/Home";
-import ScreenSaver from "../components/screenSaver/ScreenSaver";
-import SignIn from "../components/users/view/signIn/SignIn";
-import SignUp from "../components/users/view/signUp/SignUp";
-import ListTasks from "../components/home/task/view/ListTasks";
+import ErrorPage from "../pages/ErrorPage";
+import Home from "../pages/Categories";
+import ScreenSaver from "../pages/ScreenSaver";
+import SignUp from "../pages/Account/SignUp";
+import ListTasks from "../pages/Tasks";
+import SignIn from "../pages/Account/SignIn";
 
 export default function Routers() {
   const user = useSelector(userSelector);

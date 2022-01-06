@@ -11,7 +11,7 @@ import store from "./redux/store";
 import { Provider } from "react-redux";
 
 // import FetchClient from "./service/defaultAPI/FetchClient";
-import setAuthToken from "./service/defaultAPI/setAuthToken";
+import setAuthToken from "./untils/defaultAPI/setAuthToken";
 
 setAuthToken();
 
