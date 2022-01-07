@@ -12,21 +12,3 @@ export default createSlice({
     }, // Action Creator
   },
 });
-
-// const initialState = {
-//   user: {},
-// };
-
-// const UserReducer = (state = initialState, action) => {
-//   switch (action.type) {
-//     case "users/setUser": {
-//       return {
-//         user: action.payload,
-//       };
-//     }
-//     default:
-//       return state;
-//   }
-// };
-
-// export default UserReducer;

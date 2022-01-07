@@ -29,6 +29,7 @@ const useStyles = createUseStyles({
 function App() {
   const classes = useStyles();
   const dispatch = useDispatch();
+
   const [timer, setTimer] = useState(() => {
     return 1000 * 60 * 60;
   });

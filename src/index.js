@@ -1,5 +1,5 @@
 // lib
-import React from "react";
+import React, { Suspense } from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import ReactDOM from "react-dom";
 import "./index.css";
@@ -9,9 +9,11 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import store from "./redux/store";
 import { Provider } from "react-redux";
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 
 // import FetchClient from "./service/defaultAPI/FetchClient";
 import setAuthToken from "./untils/defaultAPI/setAuthToken";
+import Loader from "react-loader-spinner";
 
 setAuthToken();
 
@@ -32,7 +34,9 @@ ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
       <Router>
-        <App />
+        <Suspense fallback={<Loader />}>
+          <App />
+        </Suspense>
       </Router>
     </Provider>
   </React.StrictMode>,

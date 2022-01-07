@@ -1,35 +1,79 @@
 // lib
-import React from "react";
+import React, { lazy } from "react";
 import { useSelector } from "react-redux";
 import { userSelector } from "../redux/selectors";
 import { Routes, Route } from "react-router-dom";
 
 // components
-import ErrorPage from "../pages/ErrorPage";
-import Home from "../pages/Categories";
+import PublicRoute from "../components/routes/PublicRoute";
+import PrivateRoute from "../components/routes/PrivateRoute";
+
 import ScreenSaver from "../pages/ScreenSaver";
-import SignUp from "../pages/Account/SignUp";
-import ListTasks from "../pages/Tasks";
+import NotFoundComponent from "../components/NotFoundComponent";
 import SignIn from "../pages/Account/SignIn";
+import SignUp from "../pages/Account/SignUp";
+import routes from "../untils/router/router";
+
+// const ScreenSaver = lazy(() => {
+//   import("../pages/ScreenSaver");
+// });
+// const SignUp = lazy(() => {
+//   import("../pages/Account/SignUp");
+// });
+// const SignIn = lazy(() => {
+//   import("../pages/Account/SignIn");
+// });
+// const NotFoundComponent = lazy(() => {
+//   import("../components/NotFoundComponent");
+// });
 
 export default function Routers() {
   const user = useSelector(userSelector);
+  const isAuthenticated = user && user.token ? true : false;
 
   return (
-    <div>
-      <Routes>
-        <Route path="*" element={<ErrorPage />} />
-        <Route exact path="/" element={<ScreenSaver />} />
-        <Route exact path="users/signIn" element={<SignIn />} />
-        <Route exact path="users/signUp" element={<SignUp />} />
-
-        {user.username && (
-          <React.Fragment>
-            <Route exact path="collections" element={<Home />} />
-            <Route exact path="tasks" element={<ListTasks />} />
-          </React.Fragment>
-        )}
-      </Routes>
-    </div>
+    <Routes>
+      <Route path="*" element={<NotFoundComponent />} />
+      <Route path="" element={<ScreenSaver />} />
+      <Route
+        exact="true"
+        path="users/signIn"
+        element={
+          <PublicRoute isAuthenticated={isAuthenticated}>
+            <SignIn />
+          </PublicRoute>
+        }
+      />
+      <Route
+        exact="true"
+        path="users/signUp"
+        element={
+          <PublicRoute isAuthenticated={isAuthenticated}>
+            <SignUp />
+          </PublicRoute>
+        }
+      />
+      <Route
+        exact="true"
+        path="login"
+        element={
+          <PublicRoute isAuthenticated={isAuthenticated}>
+            <SignIn />
+          </PublicRoute>
+        }
+      />
+      {routes.map(({ component: Component, path, exact }) => (
+        <Route
+          path={`${path}`}
+          key={path}
+          exact={exact}
+          element={
+            <PrivateRoute isAuthenticated={isAuthenticated}>
+              <Component />
+            </PrivateRoute>
+          }
+        />
+      ))}
+    </Routes>
   );
 }

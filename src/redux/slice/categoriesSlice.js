@@ -7,7 +7,7 @@ export const getCategories = createAsyncThunk(
   async () => {
     try {
       const response = await collectionAPI().getCollections(
-        `api/categories?limit=8`
+        "api/categories?limit=8"
       );
       return response.items;
     } catch (err) {
