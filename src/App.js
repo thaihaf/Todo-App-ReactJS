@@ -31,7 +31,7 @@ function App() {
   const classes = useStyles();
   const dispatch = useDispatch();
 
-  const [timer, setTimer] = useState(() => {
+  const [timer] = useState(() => {
     return 1000 * 60 * 60;
   });
 
@@ -55,7 +55,7 @@ function App() {
       setAuthToken();
       dispatch(userSlice.actions.setUser({}));
     }
-  }, []);
+  }, [dispatch, timer]);
 
   return (
     <div className={classes.App}>

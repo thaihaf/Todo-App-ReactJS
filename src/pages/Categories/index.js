@@ -43,7 +43,7 @@ export default function Home() {
 
   useEffect(() => {
     dispatch(getCategories());
-  }, []);
+  }, [dispatch]);
   useEffect(() => {
     collections && collections.length > 0
       ? setHaveCollection(true)

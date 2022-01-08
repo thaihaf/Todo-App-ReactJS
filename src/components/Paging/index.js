@@ -88,9 +88,6 @@ export default function Paging({ data, handleChangeData }) {
   const numberBtn = (link, val) => {
     handleChange(link, val);
   };
-  const input = (e) => {
-    // let value = e.target.value;
-  };
 
   return (
     <div className={clsx(classes.paging__list)}>

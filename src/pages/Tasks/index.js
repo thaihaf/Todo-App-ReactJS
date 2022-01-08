@@ -107,6 +107,11 @@ export default function ListTasks() {
   const listCollections = useSelector(categoriesSelector);
   const [typeData, setTypeData] = useState("");
 
+  const handleChangeData = (data, type) => {
+    type && type === "search" ? setTypeData(type) : setTypeData("");
+    dispatch(data);
+  };
+
   useEffect(() => {
     handleChangeData(getData());
   }, []);
@@ -125,10 +130,6 @@ export default function ListTasks() {
   };
   const handleRemoveTasks = (event) => {
     toggleDeleteBar(!displayDeleteBarVal)();
-  };
-  const handleChangeData = (data, type) => {
-    type && type === "search" ? setTypeData(type) : setTypeData("");
-    dispatch(data);
   };
 
   return (

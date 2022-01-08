@@ -1,8 +1,9 @@
 // lib
-import React, { lazy } from "react";
+import { lazy } from "react";
 import { useSelector } from "react-redux";
 import { userSelector } from "../../redux/selectors";
 import { Routes, Route } from "react-router-dom";
+import routes from "../../untils/routes/routes";
 
 // components
 import PublicRoute from "../../untils/routes/PublicRoute";
@@ -12,19 +13,18 @@ import ScreenSaver from "../../pages/ScreenSaver";
 import NotFoundComponent from "../NotFoundComponent";
 import SignIn from "../../pages/Account/SignIn";
 import SignUp from "../../pages/Account/SignUp";
-import routes from "../../untils/routes/routes";
 
 // const ScreenSaver = lazy(() => {
 //   import("../../pages/ScreenSaver");
 // });
 // const SignUp = lazy(() => {
-//   import("../pages/Account/SignUp");
+//   import("../../pages/Account/SignUp");
 // });
 // const SignIn = lazy(() => {
-//   import("../pages/Account/SignIn");
+//   import("../../pages/Account/SignIn");
 // });
 // const NotFoundComponent = lazy(() => {
-//   import("../components/NotFoundComponent");
+//   import("../NotFoundComponent");
 // });
 
 export default function Routers() {
@@ -33,14 +33,14 @@ export default function Routers() {
 
   return (
     <Routes>
-      <Route path="*" element={lazy(() => import("../components/NotFoundComponent"))} />
-      <Route path="" element={lazy(() => import("../../pages/ScreenSaver"))} />
+      <Route path="*" element={<NotFoundComponent />} />
+      <Route path="" element={<ScreenSaver />} />
       <Route
         exact="true"
         path="users/signIn"
         element={
           <PublicRoute isAuthenticated={isAuthenticated}>
-            {lazy(() => import("../pages/Account/SignUp"))}
+            {<SignIn />}
           </PublicRoute>
         }
       />
@@ -49,7 +49,7 @@ export default function Routers() {
         path="users/signUp"
         element={
           <PublicRoute isAuthenticated={isAuthenticated}>
-            {lazy(() => import("../pages/Account/SignIn"))}
+            {<SignUp />}
           </PublicRoute>
         }
       />
