@@ -8,7 +8,8 @@ import "react-toastify/dist/ReactToastify.css";
 
 // Component
 import Header from "./components/Header";
-import Routers from "./routers/Routers";
+import RouterComponent from "./components/RouterComponent";
+
 
 // Css
 import "./App.css";
@@ -73,7 +74,7 @@ function App() {
         style={{ fontSize: "1.4rem" }}
       />
 
-      <Routers />
+      <RouterComponent />
     </div>
   );
 }

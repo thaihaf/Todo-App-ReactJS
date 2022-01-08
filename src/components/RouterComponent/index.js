@@ -1,21 +1,21 @@
 // lib
 import React, { lazy } from "react";
 import { useSelector } from "react-redux";
-import { userSelector } from "../redux/selectors";
+import { userSelector } from "../../redux/selectors";
 import { Routes, Route } from "react-router-dom";
 
 // components
-import PublicRoute from "../components/routes/PublicRoute";
-import PrivateRoute from "../components/routes/PrivateRoute";
+import PublicRoute from "../../untils/routes/PublicRoute";
+import PrivateRoute from "../../untils/routes/PrivateRoute";
 
-import ScreenSaver from "../pages/ScreenSaver";
-import NotFoundComponent from "../components/NotFoundComponent";
-import SignIn from "../pages/Account/SignIn";
-import SignUp from "../pages/Account/SignUp";
-import routes from "../untils/router/router";
+import ScreenSaver from "../../pages/ScreenSaver";
+import NotFoundComponent from "../NotFoundComponent";
+import SignIn from "../../pages/Account/SignIn";
+import SignUp from "../../pages/Account/SignUp";
+import routes from "../../untils/routes/routes";
 
 // const ScreenSaver = lazy(() => {
-//   import("../pages/ScreenSaver");
+//   import("../../pages/ScreenSaver");
 // });
 // const SignUp = lazy(() => {
 //   import("../pages/Account/SignUp");
@@ -33,14 +33,14 @@ export default function Routers() {
 
   return (
     <Routes>
-      <Route path="*" element={<NotFoundComponent />} />
-      <Route path="" element={<ScreenSaver />} />
+      <Route path="*" element={lazy(() => import("../components/NotFoundComponent"))} />
+      <Route path="" element={lazy(() => import("../../pages/ScreenSaver"))} />
       <Route
         exact="true"
         path="users/signIn"
         element={
           <PublicRoute isAuthenticated={isAuthenticated}>
-            <SignIn />
+            {lazy(() => import("../pages/Account/SignUp"))}
           </PublicRoute>
         }
       />
@@ -49,16 +49,7 @@ export default function Routers() {
         path="users/signUp"
         element={
           <PublicRoute isAuthenticated={isAuthenticated}>
-            <SignUp />
-          </PublicRoute>
-        }
-      />
-      <Route
-        exact="true"
-        path="login"
-        element={
-          <PublicRoute isAuthenticated={isAuthenticated}>
-            <SignIn />
+            {lazy(() => import("../pages/Account/SignIn"))}
           </PublicRoute>
         }
       />
