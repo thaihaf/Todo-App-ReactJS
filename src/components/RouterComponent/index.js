@@ -9,23 +9,12 @@ import routes from "../../untils/routes/routes";
 import PublicRoute from "../../untils/routes/PublicRoute";
 import PrivateRoute from "../../untils/routes/PrivateRoute";
 
-import ScreenSaver from "../../pages/ScreenSaver";
-import NotFoundComponent from "../NotFoundComponent";
-import SignIn from "../../pages/Account/SignIn";
-import SignUp from "../../pages/Account/SignUp";
-
-// const ScreenSaver = lazy(() => {
-//   import("../../pages/ScreenSaver");
-// });
-// const SignUp = lazy(() => {
-//   import("../../pages/Account/SignUp");
-// });
-// const SignIn = lazy(() => {
-//   import("../../pages/Account/SignIn");
-// });
-// const NotFoundComponent = lazy(() => {
-//   import("../NotFoundComponent");
-// });
+const ScreenSaver = lazy(() => import("../../pages/ScreenSaver"));
+const SignUp = lazy(() => import("../../pages/Account/SignUp"));
+const SignIn = lazy(() => {
+  return import("../../pages/Account/SignIn");
+});
+const NotFoundComponent = lazy(() => import("../NotFoundComponent"));
 
 export default function Routers() {
   const user = useSelector(userSelector);

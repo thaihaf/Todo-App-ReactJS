@@ -10,11 +10,11 @@ import "react-toastify/dist/ReactToastify.css";
 import Header from "./components/Header";
 import RouterComponent from "./components/RouterComponent";
 
-
 // Css
 import "./App.css";
 import setAuthToken from "./untils/defaultAPI/setAuthToken";
 import userSlice from "./redux/slice/userSlice";
+import Loading from "./components/Loading";
 
 // =================================================================
 const useStyles = createUseStyles({
@@ -24,6 +24,7 @@ const useStyles = createUseStyles({
     backgroundPosition: "top",
     backgroundSize: "contain",
     backgroundRepeat: "no-repeat",
+    minWidth: "295px"
   },
 });
 
@@ -62,7 +63,7 @@ function App() {
       <Header />
       <ToastContainer
         position="top-center"
-        autoClose={5000}
+        autoClose={2000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick

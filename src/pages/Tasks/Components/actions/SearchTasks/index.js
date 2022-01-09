@@ -3,8 +3,7 @@ import { useState, useRef } from "react";
 import clsx from "clsx";
 import { toast } from "react-toastify";
 
-import taskAPI from "../../../../../untils/fetchAPI/taskAPI";
-import { createAsyncThunk } from "@reduxjs/toolkit";
+import { searchTasks } from "../../../../../redux/slice/dataSlice";
 
 const useStyles = createUseStyles({
   searchTasks__bar: {
@@ -36,8 +35,6 @@ const useStyles = createUseStyles({
 
 export default function SearchTask({
   displayVal,
-  // inputRef,
-  listTasks,
   handleChangeData,
 }) {
   const classes = useStyles();
@@ -45,7 +42,7 @@ export default function SearchTask({
   const [searchVal, setSearchVal] = useState("");
   const typeingTimeoutRef = useRef(null);
 
-  const searchTasks = async () => {};
+  const searchTasksAction = async () => {};
 
   const handleChange = (e) => {
     let value = e.target.value;
@@ -57,22 +54,7 @@ export default function SearchTask({
 
     typeingTimeoutRef.current = setTimeout(async () => {
       try {
-        // const filteredTasks = await listTasks.filter((task) =>
-        //   task.title.includes(searchVal)
-        // );
-        // handleChangeData(filteredTasks, "search");
-        const getData = createAsyncThunk("data/getData", async () => {
-          try {
-            const response = await taskAPI().getTasks(
-              `api/tasks?limit=6&page=1&search=${value}`
-            );
-            return response;
-          } catch (err) {
-            toast.error(err.message);
-          }
-        });
-
-        handleChangeData(getData(), "search");
+        handleChangeData(searchTasks(value), "search");
       } catch (error) {
         let errForm = error.message;
         toast.error(errForm);
@@ -95,14 +77,13 @@ export default function SearchTask({
             classes.searchTasks__input,
             "w-100 input--none-border"
           )}
-          // ref={inputRef}
           value={searchVal}
           onChange={handleChange}
           autoFocus={true}
         />
       </div>
 
-      <div className="searchTasks__button" onClick={searchTasks}>
+      <div className="searchTasks__button" onClick={searchTasksAction}>
         <ion-icon
           name="search"
           style={{

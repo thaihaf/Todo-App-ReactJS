@@ -1,17 +1,18 @@
 // lib
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy } from "react";
 import { createUseStyles } from "react-jss";
 import clsx from "clsx";
 import { useDispatch, useSelector } from "react-redux";
 import { getData } from "../../redux/slice/dataSlice";
 import { categoriesSelector, dataSelector } from "../../redux/selectors";
+import { toast } from "react-toastify";
 
 // Component
-import Task from "../../components/Task";
-import Paging from "../../components/Paging";
-import CreateTask from "./Components/actions/CreateTask";
-import DeleteTask from "./Components/actions/DeleteTask";
-import SearchTasks from "./Components/actions/SearchTasks";
+const Task = lazy(() => import("../../components/Task"));
+const Paging = lazy(() => import("../../components/Paging"));
+const CreateTask = lazy(() => import("./Components/actions/CreateTask"));
+const DeleteTask = lazy(() => import("./Components/actions/DeleteTask"));
+const TaskActionsBar = lazy(() => import("./Components/TaskActionsBar"));
 
 // Service
 const useStyles = createUseStyles({
@@ -64,28 +65,27 @@ const useStyles = createUseStyles({
   taskBar__lable: {
     fontSize: "1.5rem",
   },
+  taskBar__message: {
+    textAlign: "center",
+  },
 });
 
 const useActions = () => {
   const [displayAddBarVal, setDisplayAddBarVal] = useState(false);
-  const [displaySearchBarVal, setDisplaySearchBarVal] = useState(false);
+
   const [displayDeleteBarVal, setDisplayDeleteBarVal] = useState(false);
 
   const toggleAddBar = (value) => (event) => {
     setDisplayAddBarVal(value);
   };
-  const toggleSearchBar = (value) => (event) => {
-    setDisplaySearchBarVal(value);
-  };
+
   const toggleDeleteBar = (value) => (event) => {
     setDisplayDeleteBarVal(value);
   };
   return {
     toggleAddBar,
-    toggleSearchBar,
     toggleDeleteBar,
     displayAddBarVal,
-    displaySearchBarVal,
     displayDeleteBarVal,
   };
 };
@@ -96,10 +96,8 @@ export default function ListTasks() {
 
   const {
     toggleAddBar,
-    toggleSearchBar,
     toggleDeleteBar,
     displayAddBarVal,
-    displaySearchBarVal,
     displayDeleteBarVal,
   } = useActions();
 
@@ -129,72 +127,28 @@ export default function ListTasks() {
     }
   };
   const handleRemoveTasks = (event) => {
-    toggleDeleteBar(!displayDeleteBarVal)();
+    if (selectedTasks.length === 0) {
+      toast.warn("Not select yet");
+    } else {
+      toggleDeleteBar(!displayDeleteBarVal)();
+    }
   };
 
   return (
     <div className="ViewCollection">
       <div className={clsx(classes.content, "content")}>
-        <div className={clsx(classes.taskBar__container)}>
-          <div className={clsx(classes.taskBar__details)}>
-            <div className={clsx(classes.taskBar__detail)}>
-              Total : {data && data.meta ? data.meta.totalItems : 0}
-            </div>
-          </div>
-
-          <div
-            className={clsx(
-              classes.taskBar__actions,
-              "d-flex align-items-center"
-            )}
-          >
-            <SearchTasks
-              displayVal={displaySearchBarVal}
-              listTasks={data.items}
-              handleChangeData={handleChangeData}
-            />
-            <button
-              className={clsx(
-                classes.taskBar__action,
-                classes.taskBar__action_search,
-                "button btn--flex btn--bg-gray btn--border btn--hover-bg-gray"
-              )}
-              onClick={toggleSearchBar(!displaySearchBarVal)}
-            >
-              <div className="taskAction__icon">
-                <ion-icon name="search"></ion-icon>
-              </div>
-            </button>
-
-            <button
-              className={clsx(
-                classes.taskBar__action,
-                "button btn--flex btn--bg-gray btn--border btn--hover-bg-gray"
-              )}
-              onClick={toggleAddBar(true)}
-            >
-              <div className="taskAction__icon">
-                <ion-icon name="add"></ion-icon>
-              </div>
-            </button>
-
-            <button
-              className={clsx(
-                classes.taskBar__action,
-                "button btn--flex btn--bg-gray btn--border btn--hover-bg-gray"
-              )}
-              onClick={handleRemoveTasks}
-            >
-              <ion-icon name="trash"></ion-icon>
-            </button>
-          </div>
-        </div>
+        <TaskActionsBar
+          toggleAddBar={toggleAddBar}
+          handleRemoveTasks={handleRemoveTasks}
+          handleChangeData={handleChangeData}
+        />
 
         {data &&
           data.meta &&
           data.meta.totalItems === 0 &&
           (typeData === "search" ? (
             <div
+              className={clsx(classes.taskBar__message)}
               style={{
                 fontSize: "1.5rem",
                 marginTop: "3rem",

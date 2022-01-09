@@ -13,6 +13,8 @@ import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 
 // import FetchClient from "./service/defaultAPI/FetchClient";
 import setAuthToken from "./untils/defaultAPI/setAuthToken";
+import Loader from "react-loader-spinner";
+import Loading from "./components/Loading";
 
 setAuthToken();
 
@@ -33,7 +35,7 @@ ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
       <Router>
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<Loading />}>
           <App />
         </Suspense>
       </Router>

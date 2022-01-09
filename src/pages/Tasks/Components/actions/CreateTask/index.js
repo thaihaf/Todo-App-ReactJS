@@ -206,7 +206,7 @@ const CreateTask = ({
                     <input
                       type="checkbox"
                       className={clsx(classes.createTask__checkbox)}
-                      checked={listSelections.find((id) => id === item.id)}
+                      checked={listSelections.find((id) => id === item.id) || ""}
                       onChange={handleChangeOption(item.id)}
                     />
                     <span className={clsx(classes.createTask__lable)}>

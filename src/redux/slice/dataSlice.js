@@ -12,6 +12,17 @@ export const getData = createAsyncThunk("data/getData", async (link) => {
     toast.error(err.message);
   }
 });
+export const searchTasks = createAsyncThunk("data/searchTasks", async (value) => {
+  try {
+    const response = await taskAPI().getTasks(
+      `api/tasks?limit=6&search=${value}`
+    );
+    return response;
+  } catch (err) {
+    console.log("err")
+    toast.error(err.message);
+  }
+});
 
 export default createSlice({
   name: "data",
@@ -24,6 +35,12 @@ export default createSlice({
       state.data = action.payload;
     },
     [getData.rejected]: (state) => {
+      state.data = [];
+    },
+    [searchTasks.fulfilled]: (state, action) => {
+      state.data = action.payload;
+    },
+    [searchTasks.rejected]: (state) => {
       state.data = [];
     },
   },

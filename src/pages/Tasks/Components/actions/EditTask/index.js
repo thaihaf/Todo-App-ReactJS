@@ -203,7 +203,7 @@ const EditTask = ({
                     <input
                       type="checkbox"
                       className={clsx(classes.editTask__checkbox)}
-                      checked={listSelections.find((id) => id === item.id)}
+                      checked={listSelections.find((id) => id === item.id) || ""}
                       value={true}
                       onChange={handleChangeOption(item.id)}
                     />

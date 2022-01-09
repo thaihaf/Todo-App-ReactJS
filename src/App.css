@@ -8,6 +8,7 @@
   --text-color-dark: #000;
   /* box-sizing:  padding-box; */
   /* Value */
+  --toastify-toast-width: 250px;
 }
 
 * {

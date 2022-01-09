@@ -2,16 +2,26 @@
 import { createUseStyles } from "react-jss";
 import { useState, useEffect } from "react";
 import clsx from "clsx";
+import { lazy } from "react";
+import "./style.css"
 
 // Component
-import Collection from "../../components/Category";
-import AddCollection from "./Components/actions/AddCollection";
 
 import { useDispatch, useSelector } from "react-redux";
 import { getCategories } from "../../redux/slice/categoriesSlice";
 import { categoriesSelector } from "../../redux/selectors";
 
+const Collection = lazy(() => import("../../components/Category"));
+const AddCollection = lazy(() => import("./Components/actions/AddCollection"));
+
 const useStyles = createUseStyles({
+  Home:{
+    maxWidth: "100rem",
+    margin : "auto"
+  },
+  content: {
+    maxWidth: "80%",
+  },
   home__title: {
     fontSize: "3rem",
     fontWeight: "bold",
@@ -21,7 +31,7 @@ const useStyles = createUseStyles({
     width: "100%",
     display: "grid",
     gap: "1.7rem",
-    transition: "all 0.3s ease",
+    transition: "all 0.3s linear",
   },
   home__actions: {
     gap: "1rem",
@@ -55,16 +65,12 @@ export default function Home() {
   };
 
   return (
-    <div className="Home">
-      <div
-        className="content"
-        style={{
-          minWidth: `${haveCollection ? `70rem` : `40rem`}`,
-        }}
-      >
+    <div className={clsx(classes.Home)}>
+      <div className={clsx("content", classes.content)}>
         <div
           className={clsx(
             classes.topBar,
+            "topBar",
             "w-100",
             haveCollection ? "d-flex" : "",
             "align-items-center",
@@ -74,7 +80,7 @@ export default function Home() {
           <div
             className={clsx(
               classes.home__title,
-              !haveCollection ? "w-100" : ""
+              !haveCollection ? "w-100" : "", "home__title"
             )}
           >
             {haveCollection ? "Collections" : "You have no collections."}
@@ -89,6 +95,7 @@ export default function Home() {
             <button
               className={clsx(
                 classes.home__action,
+                "home__action",
                 !haveCollection ? "d-none" : "",
                 "searchCollection button btn--flex btn--bg-gray btn--border btn--hover-bg-gray"
               )}
@@ -99,6 +106,7 @@ export default function Home() {
             <button
               className={clsx(
                 classes.home__action,
+                "home__action",
                 "addCollection button btn--flex btn--bg-gray btn--border btn--hover-bg-gray"
               )}
               onClick={toggleAddCollDisplayVal(true)}
@@ -110,7 +118,7 @@ export default function Home() {
         </div>
 
         <div
-          className={classes.home__collections}
+          className={clsx(classes.home__collections, "home__collections")}
           style={{
             gridTemplateColumns: `repeat(${haveCollection ? "2" : "1"},1fr)`,
           }}
