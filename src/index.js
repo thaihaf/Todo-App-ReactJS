@@ -13,7 +13,6 @@ import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 
 // import FetchClient from "./service/defaultAPI/FetchClient";
 import setAuthToken from "./untils/defaultAPI/setAuthToken";
-import Loader from "react-loader-spinner";
 import Loading from "./components/Loading";
 
 setAuthToken();

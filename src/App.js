@@ -14,7 +14,6 @@ import RouterComponent from "./components/RouterComponent";
 import "./App.css";
 import setAuthToken from "./untils/defaultAPI/setAuthToken";
 import userSlice from "./redux/slice/userSlice";
-import Loading from "./components/Loading";
 
 // =================================================================
 const useStyles = createUseStyles({
