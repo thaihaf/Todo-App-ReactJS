@@ -2,6 +2,7 @@
 import { createUseStyles } from "react-jss";
 import { Link } from "react-router-dom";
 import clsx from "clsx";
+import { memo } from "react";
 
 // Component
 
@@ -36,7 +37,7 @@ const useStyles = createUseStyles({
     width: "fit-content",
   },
 });
-export default function Collection({ collection }) {
+function Collection({ collection }) {
   const classes = useStyles();
 
   return (
@@ -69,3 +70,5 @@ export default function Collection({ collection }) {
     </Link>
   );
 }
+
+export default memo(Collection);

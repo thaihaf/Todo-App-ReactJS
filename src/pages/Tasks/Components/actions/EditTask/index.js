@@ -1,12 +1,12 @@
 // lib
 import { createUseStyles } from "react-jss";
 import clsx from "clsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-import taskAPI from "../../../../../untils/fetchAPI/taskAPI";
-import useTaskForm from "../../../../../hooks/useTaskForm/useTaskForm";
-import { getData } from "../../../../../redux/slice/dataSlice";
+import taskAPI from "../../../../../ultils/fetchAPI/taskAPI";
+import { getData } from "../../../../../redux/reducers/dataSlice";
+import { useForm } from "react-hook-form";
 
 const useStyles = createUseStyles({
   EditTask: {
@@ -111,13 +111,20 @@ const EditTask = ({
     return a;
   });
 
-  const HandleEditTask = async (values) => {
-    let title = values.title;
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setFocus,
+  } = useForm();
+
+  const onSubmit = async (data) => {
+    let title = data.title;
     let categoryIds = listSelections;
     let status = "IN_PROGRESS";
-    let data = { title, categoryIds, status };
+    let taskDetails = { title, categoryIds, status };
     try {
-      await taskAPI().updateTask(task.id, data);
+      await taskAPI().updateTask(task.id, taskDetails);
 
       toast.success("🦄 Update Task Successful!");
       toggleFunc(false)();
@@ -128,12 +135,6 @@ const EditTask = ({
       toast.error(errForm);
     }
   };
-
-  const { handleChange, handleSubmit, values, errors } = useTaskForm(
-    "edit",
-    HandleEditTask,
-    task
-  );
 
   const closeTabFunc = () => (event) => {
     toggleFunc(false)();
@@ -151,6 +152,10 @@ const EditTask = ({
     }
   };
 
+  useEffect(() => {
+    setFocus("title");
+  }, [setFocus]);
+
   return (
     <div
       className={clsx(
@@ -165,7 +170,7 @@ const EditTask = ({
       ></div>
 
       <div className={clsx(classes.editTask__container, "position-absolute")}>
-        <form method="post" onSubmit={handleSubmit}>
+        <form method="post" onSubmit={handleSubmit(onSubmit)}>
           <div className="editTask__top d-flex w-100">
             <div className={clsx(classes.editTask__caption, "mr-auto")}>
               Edit Task
@@ -182,19 +187,25 @@ const EditTask = ({
               placeholder="My Task"
               className="btn--outline w-100 py-3"
               style={{ fontSize: "1.6rem" }}
-              name="title"
-              value={values.title}
-              onChange={handleChange}
+              defaultValue={task.title}
+              autoComplete="title"
+              {...register("title", {
+                required: "This is required.",
+                minLength: {
+                  value: 6,
+                  message: "Min length is 6",
+                },
+              })}
             />
-            {errors.title && (
-              <div className={clsx(classes.editTask__err)}>*{errors.title}</div>
+            {Object.keys(errors).length !== 0 && (
+              <div className={clsx(classes.editTask__err)}>*{errors.title?.message}</div>
             )}
           </div>
 
           <div className={clsx(classes.editTask__group, "bar-listColl")}>
             <div className={clsx(classes.editTask__title)}>List Collection</div>
             <div className={clsx(classes.editTask__listColls)}>
-              {listCollections.map((item) => {
+              {listCollections?.map((item) => {
                 return (
                   <div
                     key={item.id}
@@ -203,7 +214,9 @@ const EditTask = ({
                     <input
                       type="checkbox"
                       className={clsx(classes.editTask__checkbox)}
-                      checked={listSelections.find((id) => id === item.id) || ""}
+                      checked={
+                        listSelections.find((id) => id === item.id) || ""
+                      }
                       value={true}
                       onChange={handleChangeOption(item.id)}
                     />

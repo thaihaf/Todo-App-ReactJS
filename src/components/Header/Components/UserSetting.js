@@ -2,14 +2,13 @@
 import { createUseStyles } from "react-jss";
 import clsx from "clsx";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
-import usePasswordForm from "../../../../../../hooks/usePasswordForm/usePasswordForm";
-import userAPI from "../../../../../../untils/fetchAPI/userAPI";
-import userSlice from "../../../../../../redux/slice/userSlice";
-import setAuthToken from "../../../../../../untils/defaultAPI/setAuthToken";
-import { userSelector } from "../../../../../../redux/selectors";
+import userAPI from "../../../ultils/fetchAPI/userAPI";
+import { userSelector } from "../../../redux/selectors";
+import { handleLogin } from "../../../redux/reducers/userSlice";
+import { useForm } from "react-hook-form";
+import { useEffect } from "react";
 
 const useStyles = createUseStyles({
   Settings: {
@@ -107,41 +106,58 @@ const useStyles = createUseStyles({
 
 const Settings = ({ toggleVal, toggleFunc }) => {
   const classes = useStyles();
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector(userSelector);
 
-  const HandleChangePassword = async (newPassword) => {
-    const account = { username: user.username, password: newPassword };
-    const newAccount = { username: user.username, newPassword: newPassword };
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setFocus,
+    setValue,
+    watch,
+    setError,
+  } = useForm();
 
-    try {
-      await userAPI().updateUser(user.id, newAccount);
-      toggleFunc();
-      toast.success("🦄 Change password successfully!");
+  const onSubmit = async (data) => {
+    if (watch("newpass") === watch("repass")) {
+      setError("repass", {
+        message: "",
+      });
 
-      setTimeout(async () => {
-        const userTemp = await userAPI().login(account);
-        localStorage.setItem("user", JSON.stringify(userTemp));
+      const account = { username: user.username, password: data.newpass };
+      const newAccount = { username: user.username, newPassword: data.newpass };
 
-        setAuthToken(userTemp.token);
-        dispatch(userSlice.actions.setUser(userTemp));
-        navigate("/collections");
-      }, 1000);
-    } catch (error) {
-      let errForm = error.message;
-      toast.error(errForm);
-      localStorage.setItem("user", JSON.stringify(user));
+      try {
+        await userAPI().updateUser(user.id, newAccount);
+        toast.success("🦄 Change password successfully!");
+        closeTabFunc();
+
+        setTimeout(async () => {
+          dispatch(handleLogin(account));
+          localStorage.setItem("accepted", new Date().getTime());
+        }, 500);
+      } catch (error) {
+        let errForm = error.message;
+        toast.error(errForm);
+        localStorage.setItem("user", JSON.stringify(user));
+      }
+    } else {
+      setError("repass", {
+        message: "Re-password not be match",
+      });
     }
   };
 
-  const { handleChange, handleSubmit, setEmptyValues, values, errors } =
-    usePasswordForm(HandleChangePassword);
-
   const closeTabFunc = () => {
     toggleFunc();
-    setEmptyValues();
+    setValue("newpass", "");
+    setValue("repass", "");
   };
+
+  useEffect(() => {
+    setFocus("newpass");
+  }, [setFocus]);
 
   return (
     <div
@@ -157,7 +173,7 @@ const Settings = ({ toggleVal, toggleFunc }) => {
       ></div>
 
       <div className={clsx(classes.settings__container, "position-absolute")}>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <div className="settings__top d-flex w-100">
             <div className={clsx(classes.settings__caption, "mr-auto")}>
               Account Setting
@@ -168,24 +184,6 @@ const Settings = ({ toggleVal, toggleFunc }) => {
           </div>
 
           <div className={clsx(classes.settings__groups)}>
-            {/* <div className={clsx(classes.settings__group, "bar-title")}>
-              <div className={clsx(classes.settings__title)}>Old Password</div>
-              <input
-                type="text"
-                placeholder="old password"
-                className="btn--outline w-100 py-3"
-                style={{ fontSize: "1.6rem" }}
-                name="oldpass"
-                value={values.oldpass}
-                onChange={handleChange}
-              />
-              {errors.oldpass && (
-                <div className={clsx(classes.settings__err)}>
-                  *{errors.oldpass}
-                </div>
-              )}
-              </div> */}
-
             <div className={clsx(classes.settings__group, "bar-title")}>
               <div className={clsx(classes.settings__title)}>New Password</div>
               <input
@@ -193,13 +191,18 @@ const Settings = ({ toggleVal, toggleFunc }) => {
                 placeholder="new password"
                 className="btn--outline w-100 py-3"
                 style={{ fontSize: "1.6rem" }}
-                name="newpass"
-                value={values.newpass}
-                onChange={handleChange}
+                autoComplete="new-password"
+                {...register("newpass", {
+                  required: "This is required.",
+                  minLength: {
+                    value: 6,
+                    message: "Min length is 6",
+                  },
+                })}
               />
-              {errors.newpass && (
+              {Object.keys(errors).length !== 0 && (
                 <div className={clsx(classes.settings__err)}>
-                  *{errors.newpass}
+                  {errors.newpass?.message}
                 </div>
               )}
             </div>
@@ -210,13 +213,18 @@ const Settings = ({ toggleVal, toggleFunc }) => {
                 placeholder="re-password"
                 className="btn--outline w-100 py-3"
                 style={{ fontSize: "1.6rem" }}
-                name="repass"
-                value={values.repass}
-                onChange={handleChange}
+                autoComplete="re-password"
+                {...register("repass", {
+                  required: "This is required.",
+                  minLength: {
+                    value: 6,
+                    message: "Min length is 6",
+                  },
+                })}
               />
-              {errors.repass && (
+              {Object.keys(errors).length !== 0 && (
                 <div className={clsx(classes.settings__err)}>
-                  *{errors.repass}
+                  {errors.repass?.message}
                 </div>
               )}
             </div>

@@ -7,8 +7,8 @@ import clsx from "clsx";
 
 // Component
 import CollectionBar from "../CollectionBar";
-import taskAPI from "../../../../untils/fetchAPI/taskAPI";
-import collectionAPI from "../../../../untils/fetchAPI/collectionsAPI";
+import taskAPI from "../../../../ultils/fetchAPI/taskAPI";
+import collectionAPI from "../../../../ultils/fetchAPI/collectionsAPI";
 
 // Service
 

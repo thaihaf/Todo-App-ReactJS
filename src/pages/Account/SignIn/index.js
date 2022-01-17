@@ -8,9 +8,7 @@ import clsx from "clsx";
 import { toast } from "react-toastify";
 
 // Component
-import userAPI from "../../../untils/fetchAPI/userAPI";
-import setAuthToken from "../../../untils/defaultAPI/setAuthToken";
-import userSlice from "../../../redux/slice/userSlice";
+import { handleLogin } from "../../../redux/reducers/userSlice";
 
 // =================================================================
 const useStyles = createUseStyles({
@@ -70,27 +68,12 @@ export default function SignIn() {
   } = useForm();
 
   const onSubmit = async (data) => {
-    try {
-      let userTemp = await userAPI().login({
-        username: data.username,
-        password: data.password,
-      });
-
-      localStorage.setItem("user", JSON.stringify(userTemp));
-      localStorage.setItem("accepted", new Date().getTime());
-
-      setErrorForm("");
-      toast.success("🦄 Loggin successfully!");
-
-      setAuthToken(userTemp.token);
-      dispatch(userSlice.actions.setUser(userTemp));
-
-      navigate("/collections");
-    } catch (error) {
-      const errorMessage = error.response.data.message;
-      setErrorForm(errorMessage);
-      toast.error(errorMessage);
-    }
+    dispatch(handleLogin(data));
+    navigate("/collections");
+    
+    setErrorForm("");
+    toast.success("🦄 Loggin successfully!");
+    localStorage.setItem("accepted", new Date().getTime());
   };
 
   useEffect(() => {
@@ -130,6 +113,7 @@ export default function SignIn() {
                 )}
                 type="text"
                 placeholder="Username"
+                autoComplete="username"
                 {...register("username", {
                   required: "This is required.",
                   minLength: {
@@ -154,6 +138,7 @@ export default function SignIn() {
                 )}
                 type="password"
                 placeholder="Password"
+                autoComplete="password"
                 {...register("password", {
                   required: "This is required.",
                   minLength: {

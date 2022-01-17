@@ -1,6 +1,8 @@
-import axios from "axios";
+import axiosInstance from "../../helpers/axios";
 
 export default function taskAPI() {
+  const axios = axiosInstance();
+
   const createTask = async (data) => {
     let res = await axios.post("api/tasks", data);
     return res.data;

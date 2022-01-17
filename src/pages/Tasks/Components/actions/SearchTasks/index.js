@@ -3,7 +3,7 @@ import { useState, useRef } from "react";
 import clsx from "clsx";
 import { toast } from "react-toastify";
 
-import { searchTasks } from "../../../../../redux/slice/dataSlice";
+import { searchTasks } from "../../../../../redux/reducers/dataSlice";
 
 const useStyles = createUseStyles({
   searchTasks__bar: {
@@ -59,7 +59,7 @@ export default function SearchTask({
         let errForm = error.message;
         toast.error(errForm);
       }
-    }, 700);
+    }, 1000);
   };
 
   return (

@@ -43,14 +43,14 @@ function ScreenSaver() {
           copletion.
         </p>
         <div className={classes.screenSaver__buttons + " btns--flex"}>
-          <Link to={user.username ? "collections" : "users/signIn"}>
+          <Link to={user ? "/collections" : "/users/signIn"}>
             <button
               className={`${classes.screenSaver__button} button btn--none-border btn--bg-pink btn--bb-pink btn--hover-trans`}
             >
               get start
             </button>
           </Link>
-          <Link to="">
+          <Link to="/">
             <button
               className={`${classes.screenSaver__button}  button btn--none-border btn--bg-gray btn--bb-gray btn--hover-trans`}
             >

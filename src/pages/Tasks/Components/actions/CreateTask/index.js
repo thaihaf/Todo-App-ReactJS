@@ -4,9 +4,10 @@ import clsx from "clsx";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
-import useTaskForm from "../../../../../hooks/useTaskForm/useTaskForm";
-import taskAPI from "../../../../../untils/fetchAPI/taskAPI";
-import { getData } from "../../../../../redux/slice/dataSlice";
+import taskAPI from "../../../../../ultils/fetchAPI/taskAPI";
+import { getData } from "../../../../../redux/reducers/dataSlice";
+import { useForm } from "react-hook-form";
+import { useEffect } from "react";
 
 const useStyles = createUseStyles({
   CreateTask: {
@@ -104,32 +105,36 @@ const CreateTask = ({
 
   const [listSelections, setListSelections] = useState([]);
 
-  const HandleCreateTask = async (values) => {
-    let title = values.title;
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setFocus,
+    setValue,
+  } = useForm();
+
+  const closeTabFunc = () => (event) => {
+    setValue("title", "");
+    setListSelections([]);
+    toggleFunc(false)();
+  };
+
+  const onSubmit = async (data) => {
+    let title = data.title;
     let categoryIds = listSelections;
-    let data = { title, categoryIds };
+    let taskDetails = { title, categoryIds };
 
     try {
-       await taskAPI().createTask(data);
+      await taskAPI().createTask(taskDetails);
 
-      setListSelections([]);
+      closeTabFunc()();
+
       toast.success("🦄 Create Task Successful!");
-      toggleFunc(false)();
-
       handleChangeData(getData());
     } catch (error) {
       let errForm = error.message;
       toast.error(errForm);
     }
-  };
-
-  const { handleChange, handleSubmit, setEmptyValues, values, errors } =
-    useTaskForm("create", HandleCreateTask);
-
-  const closeTabFunc = () => (event) => {
-    setEmptyValues();
-    setListSelections([]);
-    toggleFunc(false)();
   };
 
   const handleChangeOption = (id) => (event) => {
@@ -143,6 +148,10 @@ const CreateTask = ({
       setListSelections([...listSelections, id]);
     }
   };
+
+  useEffect(() => {
+    setFocus("title");
+  }, [setFocus]);
 
   return (
     <div
@@ -161,7 +170,7 @@ const CreateTask = ({
       ></div>
 
       <div className={clsx(classes.createTask__container, "position-absolute")}>
-        <form method="post" onSubmit={handleSubmit}>
+        <form method="post" onSubmit={handleSubmit(onSubmit)}>
           <div className="createTask__top d-flex w-100">
             <div className={clsx(classes.createTask__caption, "mr-auto")}>
               create Task
@@ -181,13 +190,18 @@ const CreateTask = ({
               placeholder="My Task"
               className="btn--outline w-100 py-3"
               style={{ fontSize: "1.6rem" }}
-              name="title"
-              value={values.title}
-              onChange={handleChange}
+              autoComplete="title"
+              {...register("title", {
+                required: "This is required.",
+                minLength: {
+                  value: 6,
+                  message: "Min length is 6",
+                },
+              })}
             />
-            {errors.title && (
+            {Object.keys(errors).length !== 0 && (
               <div className={clsx(classes.createTask__err)}>
-                *{errors.title}
+                *{errors.title?.message}
               </div>
             )}
           </div>
@@ -197,7 +211,7 @@ const CreateTask = ({
               List Collection
             </div>
             <div className={clsx(classes.createTask__listColls)}>
-              {listCollections.map((item) => {
+              {listCollections?.map((item) => {
                 return (
                   <div
                     key={item.id}
@@ -206,7 +220,9 @@ const CreateTask = ({
                     <input
                       type="checkbox"
                       className={clsx(classes.createTask__checkbox)}
-                      checked={listSelections.find((id) => id === item.id) || ""}
+                      checked={
+                        listSelections.find((id) => id === item.id) || ""
+                      }
                       onChange={handleChangeOption(item.id)}
                     />
                     <span className={clsx(classes.createTask__lable)}>

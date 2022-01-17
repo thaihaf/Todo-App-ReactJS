@@ -4,7 +4,7 @@ import { createUseStyles } from "react-jss";
 import { useState, useRef } from "react";
 import { toast } from "react-toastify";
 
-import { getData } from "../../redux/slice/dataSlice";
+import { getData } from "../../redux/reducers/dataSlice";
 
 const useStyles = createUseStyles({
   paging__list: {

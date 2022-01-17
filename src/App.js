@@ -1,10 +1,11 @@
 // lib
-import React, { useState } from "react";
+import React from "react";
 import { createUseStyles } from "react-jss";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import store from "./redux/store";
 
 // Component
 import Header from "./components/Header";
@@ -12,8 +13,9 @@ import RouterComponent from "./components/RouterComponent";
 
 // Css
 import "./App.css";
-import setAuthToken from "./untils/defaultAPI/setAuthToken";
-import userSlice from "./redux/slice/userSlice";
+import setAuthToken from "./helpers/setHeadersAxios";
+import userSlice from "./redux/reducers/userSlice";
+import { userSelector } from "./redux/selectors";
 
 // =================================================================
 const useStyles = createUseStyles({
@@ -23,43 +25,37 @@ const useStyles = createUseStyles({
     backgroundPosition: "top",
     backgroundSize: "contain",
     backgroundRepeat: "no-repeat",
-    minWidth: "295px"
+    minWidth: "295px",
   },
 });
 
 function App() {
   const classes = useStyles();
   const dispatch = useDispatch();
-
-  const [timer] = useState(() => {
-    return 1000 * 60 * 60;
-  });
+  const userTemp = useSelector(userSelector);
 
   useEffect(() => {
-    const expirationDuration = timer; // 1 hours 2
+    const expirationDuration = 1000 * 60 * 60; // 1 hours 2
     const prevAccepted = localStorage.getItem("accepted");
     const currentTime = new Date().getTime();
 
     const prevAcceptedExpired =
       prevAccepted && currentTime - prevAccepted < expirationDuration;
 
-    const userTemp = JSON.parse(localStorage.getItem("user"));
-
     if (prevAcceptedExpired && userTemp) {
-      setAuthToken(userTemp.token);
+      // setAuthToken(userTemp.token);
       dispatch(userSlice.actions.setUser(userTemp));
     } else {
-      localStorage.removeItem("user");
-      localStorage.removeItem("accepted");
-
-      setAuthToken();
-      dispatch(userSlice.actions.setUser({}));
+      localStorage.clear();
     }
-  }, [dispatch, timer]);
+  }, [dispatch, userTemp]);
 
   return (
     <div className={classes.App}>
       <Header />
+
+      <RouterComponent />
+
       <ToastContainer
         position="top-center"
         autoClose={2000}
@@ -73,8 +69,6 @@ function App() {
         transition={Bounce}
         style={{ fontSize: "1.4rem" }}
       />
-
-      <RouterComponent />
     </div>
   );
 }

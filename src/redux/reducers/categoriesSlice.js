@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
-import collectionAPI from "../../untils/fetchAPI/collectionsAPI";
+import collectionAPI from "../../ultils/fetchAPI/collectionsAPI";
+import { categoriesState } from "../initialState/initialState";
 
 export const getCategories = createAsyncThunk(
   "categories/getCategories",
@@ -16,11 +17,9 @@ export const getCategories = createAsyncThunk(
   }
 );
 
-export default createSlice({
+const categoriesSlice = createSlice({
   name: "categories",
-  initialState: {
-    categories: [],
-  },
+  initialState: categoriesState,
   reducers: {},
   extraReducers: {
     [getCategories.fulfilled]: (state, action) => {
@@ -31,3 +30,5 @@ export default createSlice({
     },
   },
 });
+
+export default categoriesSlice

@@ -3,14 +3,13 @@ import clsx from "clsx";
 import { createUseStyles } from "react-jss";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { userSelector } from "../../../../redux/selectors";
 
 // components
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import setAuthToken from "../../../../untils/defaultAPI/setAuthToken";
-import userSlice from "../../../../redux/slice/userSlice";
-import Settings from "./Components/UserSetting";
+import Settings from "./UserSetting";
+import { userSelector } from "../../../redux/selectors";
+import userSlice from "../../../redux/reducers/userSlice";
 
 // service
 
@@ -23,9 +22,7 @@ const useStyles = createUseStyles({
     backgroundPosition: "center",
     backgroundSize: "cover",
     backgroundImage:
-      "url(" +
-      "https://www.kindpng.com/picc/m/78-786207_user-avatar-png-user-avatar-icon-png-transparent.png" +
-      ")",
+      "url(https://www.kindpng.com/picc/m/78-786207_user-avatar-png-user-avatar-icon-png-transparent.png)",
     cursor: "pointer",
   },
 
@@ -54,11 +51,8 @@ export default function HeaderUser() {
   const dispatch = useDispatch();
 
   function HandleLogout() {
-    setAuthToken();
+    localStorage.clear();
     dispatch(userSlice.actions.setUser({}));
-
-    localStorage.removeItem("user");
-    localStorage.removeItem("accepted");
 
     toast.success("🦄 Logout successfully!");
     navigate("users/signIn");

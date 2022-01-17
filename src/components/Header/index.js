@@ -19,34 +19,34 @@ export default function Header() {
         "position-fixed w-100 t-0 d-flex align-items-center"
       )}
     >
-      <Link to="" className={clsx("header__logo d-flex align-items-center")}>
+      <Link to="/" className={clsx("header__logo d-flex align-items-center")}>
         <ion-icon name="dice"></ion-icon>
         <div className={"header__logo_text"}>todo app</div>
       </Link>
 
-      {user.username && (
+      {user && user.username && (
         <div
           className={clsx("header__links", "d-flex align-items-center mr-auto")}
         >
           <Link to="/collections" className={clsx("header__link")}>
             <div className={clsx("header__link_text")}>Collections</div>
           </Link>
-          <Link to="tasks" className={clsx("header__link")}>
+          <Link to="/tasks" className={clsx("header__link")}>
             <div className={clsx("header__link_text")}>Tasks</div>
           </Link>
         </div>
       )}
 
-      {user.username ? (
+      {user && user.username ? (
         <HeaderUser />
       ) : (
         <div className={clsx("ml-auto btns--flex")}>
-          <Link to="users/signIn">
+          <Link to="/users/signIn">
             <button className="button btn--none-border btn--hover-bb mb-0">
               Sign in
             </button>
           </Link>
-          <Link to="users/signUp">
+          <Link to="/users/signUp">
             <button className="button btn--border btn--hover-border mb-0">
               Sign up
             </button>

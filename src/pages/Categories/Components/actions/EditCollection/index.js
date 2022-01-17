@@ -4,8 +4,8 @@ import clsx from "clsx";
 // import { useState } from "react";
 // import axios from "axios";
 
-import useForm from "../untils/useCollectionForm";
-import useColor from "../untils/useColor";
+import useForm from "../ultils/useCollectionForm";
+import useColor from "../ultils/useColor";
 import { toast } from "react-toastify";
 
 const useStyles = createUseStyles({

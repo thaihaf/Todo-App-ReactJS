@@ -1,18 +1,19 @@
 // lib
-import { useState, useEffect, lazy } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { createUseStyles } from "react-jss";
 import clsx from "clsx";
 import { useDispatch, useSelector } from "react-redux";
-import { getData } from "../../redux/slice/dataSlice";
+import { getData } from "../../redux/reducers/dataSlice";
 import { categoriesSelector, dataSelector } from "../../redux/selectors";
 import { toast } from "react-toastify";
 
 // Component
-const Task = lazy(() => import("../../components/Task"));
-const Paging = lazy(() => import("../../components/Paging"));
-const CreateTask = lazy(() => import("./Components/actions/CreateTask"));
-const DeleteTask = lazy(() => import("./Components/actions/DeleteTask"));
-const TaskActionsBar = lazy(() => import("./Components/TaskActionsBar"));
+import Task from "../../components/Task";
+import Paging from "../../components/Paging";
+import CreateTask from "./Components/actions/CreateTask";
+import DeleteTask from "./Components/actions/DeleteTask";
+import TaskActionsBar from "./Components/TaskActionsBar";
+import { getCategories } from "../../redux/reducers/categoriesSlice";
 
 // Service
 const useStyles = createUseStyles({
@@ -105,13 +106,15 @@ export default function ListTasks() {
   const listCollections = useSelector(categoriesSelector);
   const [typeData, setTypeData] = useState("");
 
-  const handleChangeData = (data, type) => {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const handleChangeData = useCallback((data, type) => {
     type && type === "search" ? setTypeData(type) : setTypeData("");
     dispatch(data);
-  };
+  });
 
   useEffect(() => {
     handleChangeData(getData());
+    dispatch(getCategories());
   }, []);
 
   const [selectedTasks, setSelectedTasks] = useState([]);
@@ -128,12 +131,14 @@ export default function ListTasks() {
   };
   const handleRemoveTasks = (event) => {
     if (selectedTasks.length === 0) {
-      toast.warn("Not select yet");
+      toast.warn("Not task select yet");
     } else {
       toggleDeleteBar(!displayDeleteBarVal)();
     }
   };
-
+  const clearSelectedTasks = () => {
+    setSelectedTasks([]);
+  };
   return (
     <div className="ViewCollection">
       <div className={clsx(classes.content, "content")}>
@@ -172,10 +177,8 @@ export default function ListTasks() {
           ))}
 
         <div className={clsx(classes.tasks)}>
-          {data &&
-            data.meta &&
-            data.meta.totalItems > 0 &&
-            data.items.map((task) => {
+          {
+            data?.items?.map((task) => {
               return (
                 <Task
                   key={task.id}
@@ -204,6 +207,7 @@ export default function ListTasks() {
           displayVal={displayDeleteBarVal}
           toggleFunc={toggleDeleteBar}
           handleChangeData={handleChangeData}
+          clearSelectedTasks={clearSelectedTasks}
         />
       </div>
     </div>

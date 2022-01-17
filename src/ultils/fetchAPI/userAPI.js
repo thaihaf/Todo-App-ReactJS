@@ -1,6 +1,8 @@
-import axios from "axios";
+import axiosInstance from "../../helpers/axios";
 
 export default function userAPI() {
+  const axios = axiosInstance();
+
   const register = async (details) => {
     let res = await axios.post("auth/register", details);
     return res.data;

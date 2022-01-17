@@ -2,8 +2,8 @@
 import { createUseStyles } from "react-jss";
 import clsx from "clsx";
 import { toast } from "react-toastify";
-import taskAPI from "../../../../../untils/fetchAPI/taskAPI";
-import { getData } from "../../../../../redux/slice/dataSlice";
+import taskAPI from "../../../../../ultils/fetchAPI/taskAPI";
+import { getData } from "../../../../../redux/reducers/dataSlice";
 
 const useStyles = createUseStyles({
   DeleteTask: {
@@ -58,7 +58,13 @@ const useStyles = createUseStyles({
   },
 });
 
-const DeleteTask = ({ taskIDs, toggleFunc, displayVal, handleChangeData }) => {
+const DeleteTask = ({
+  taskIDs,
+  toggleFunc,
+  displayVal,
+  handleChangeData,
+  clearSelectedTasks,
+}) => {
   const classes = useStyles();
 
   const HandleSubmit = async (e) => {
@@ -70,6 +76,7 @@ const DeleteTask = ({ taskIDs, toggleFunc, displayVal, handleChangeData }) => {
           await taskAPI().deleteTask(taskID);
           handleChangeData(getData());
         });
+        clearSelectedTasks();
       } else {
         await taskAPI().deleteTask(taskIDs);
         handleChangeData(getData());

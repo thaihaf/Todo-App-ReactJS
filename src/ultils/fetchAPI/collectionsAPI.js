@@ -1,6 +1,8 @@
-import axios from "axios";
+import axiosInstance from "../../helpers/axios";
 
 export default function taskAPI() {
+  const axios = axiosInstance();
+
   const getCollections = async (linkAPI) => {
     const res = await axios.get(linkAPI);
     return res.data;

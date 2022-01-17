@@ -3,8 +3,9 @@ import { createUseStyles } from "react-jss";
 import clsx from "clsx";
 import { toast } from "react-toastify";
 
-import useCollectionForm from "../../../../../hooks/useCollection/useCollectionForm";
 import useColor from "../../../../../hooks/useCollection/useColor";
+import { useForm } from "react-hook-form";
+import { useEffect } from "react";
 
 const useStyles = createUseStyles({
   AddCollection: {
@@ -70,37 +71,45 @@ const useStyles = createUseStyles({
   },
 });
 
-const HandleCreateCollection = (values) => {
-  toast.error(`This action is only designed for admin`);
-  console.log("Name Collection : " + values.name);
-
-  // const name = values.name;
-  // axios({
-  //   method: "post",
-  //   url: "api/categories/${collection.id}",
-  //   data: { name },
-  // })
-  //   .then((res) => {
-  //     console.log(res);
-  //   })
-  //   .catch((err) => {
-  //     const errMsg = err.response.data.message;
-  //     console.log(errMsg);
-  //   });
-};
-
 const AddCollection = ({ toggleFunc, displayVal }) => {
   const classes = useStyles();
 
-  const { handleChange, handleSubmit, values, errors } = useCollectionForm(
-    HandleCreateCollection
-  );
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setFocus,
+  } = useForm();
+
   const { handleChangeColor, listColors, colorValue } = useColor();
+
+  const onSubmit = async (data) => {
+    toast.error("This action is only designed for admin");
+    console.log("Name Collection : " + data.name);
+
+    // const name = values.name;
+    // axios({
+    //   method: "post",
+    //   url: "api/categories/${collection.id}",
+    //   data: { name },
+    // })
+    //   .then((res) => {
+    //     console.log(res);
+    //   })
+    //   .catch((err) => {
+    //     const errMsg = err.response.data.message;
+    //     console.log(errMsg);
+    //   });
+  };
 
   const closeTabFunc = () => (event) => {
     handleChangeColor("")();
     toggleFunc(false)();
   };
+
+  useEffect(() => {
+    setFocus("name");
+  }, [setFocus]);
 
   return (
     <div
@@ -121,7 +130,7 @@ const AddCollection = ({ toggleFunc, displayVal }) => {
       <div
         className={clsx(classes.addCollection__container, "position-absolute")}
       >
-        <form method="post" onSubmit={handleSubmit}>
+        <form method="post" onSubmit={handleSubmit(onSubmit)}>
           <div className="addCollection__top d-flex w-100">
             <div className={clsx(classes.addCollection__caption, "mr-auto")}>
               add collection
@@ -138,13 +147,17 @@ const AddCollection = ({ toggleFunc, displayVal }) => {
               placeholder="My Collection"
               className="btn--outline w-100 py-3"
               style={{ fontSize: "1.6rem" }}
-              name="name"
-              value={values.name}
-              onChange={handleChange}
+              {...register("name", {
+                required: "This is required.",
+                minLength: {
+                  value: 6,
+                  message: "Min length is 6",
+                },
+              })}
             />
-            {errors.name && (
+            {Object.keys(errors).length !== 0 && (
               <div className={clsx(classes.addCollection__err)}>
-                *{errors.name}
+                *{errors.name?.message}
               </div>
             )}
           </div>
@@ -153,7 +166,7 @@ const AddCollection = ({ toggleFunc, displayVal }) => {
             <div className={clsx(classes.addCollection__title)}>color</div>
 
             <div className={clsx(classes.addCollection__colors, "w-100")}>
-              {listColors.map((color) => {
+              {listColors?.map((color) => {
                 return (
                   <div
                     className={clsx(classes.addCollection__color)}

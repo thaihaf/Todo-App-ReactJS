@@ -2,19 +2,20 @@
 import { useSelector } from "react-redux";
 import { userSelector } from "../../redux/selectors";
 import { Routes, Route } from "react-router-dom";
-import routes from "../../untils/routes/routes";
+import routes from "../../routes";
 
 // components
-import PublicRoute from "../../untils/routes/PublicRoute";
-import PrivateRoute from "../../untils/routes/PrivateRoute";
+import PublicRoute from "../../routes/PublicRoute";
+import PrivateRoute from "../../routes/PrivateRoute";
 
 import NotFoundComponent from "../../components/NotFoundComponent";
 import ScreenSaver from "../../pages/ScreenSaver";
 
-export default function Routers() {
-  const user = useSelector(userSelector);
-  const isAuthenticated = user && user.token ? true : false;
+// ultils
+import isAuthenticated from "../../ultils/isAuthenticate";
 
+export default function Routers() {
+  const isAuthen = isAuthenticated();
   return (
     <Routes>
       <Route path="*" element={<NotFoundComponent />} />
@@ -28,11 +29,11 @@ export default function Routers() {
             path={path}
             element={
               isPublic ? (
-                <PublicRoute isAuthenticated={isAuthenticated}>
+                <PublicRoute isAuthenticated={isAuthen}>
                   {<Component />}
                 </PublicRoute>
               ) : (
-                <PrivateRoute isAuthenticated={isAuthenticated}>
+                <PrivateRoute isAuthenticated={isAuthen}>
                   {<Component />}
                 </PrivateRoute>
               )

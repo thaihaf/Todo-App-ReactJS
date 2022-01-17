@@ -8,7 +8,7 @@ import "./style.css"
 // Component
 
 import { useDispatch, useSelector } from "react-redux";
-import { getCategories } from "../../redux/slice/categoriesSlice";
+import { getCategories } from "../../redux/reducers/categoriesSlice";
 import { categoriesSelector } from "../../redux/selectors";
 
 const Collection = lazy(() => import("../../components/Category"));

@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
-import taskAPI from "../../untils/fetchAPI/taskAPI";
+import taskAPI from "../../ultils/fetchAPI/taskAPI";
+import { dataState } from "../initialState/initialState";
 
 export const getData = createAsyncThunk("data/getData", async (link) => {
   try {
@@ -12,23 +13,24 @@ export const getData = createAsyncThunk("data/getData", async (link) => {
     toast.error(err.message);
   }
 });
-export const searchTasks = createAsyncThunk("data/searchTasks", async (value) => {
-  try {
-    const response = await taskAPI().getTasks(
-      `api/tasks?limit=6&search=${value}`
-    );
-    return response;
-  } catch (err) {
-    console.log("err")
-    toast.error(err.message);
+export const searchTasks = createAsyncThunk(
+  "data/searchTasks",
+  async (value) => {
+    try {
+      const response = await taskAPI().getTasks(
+        `api/tasks?limit=6&search=${value}`
+      );
+      return response;
+    } catch (err) {
+      console.log("err");
+      toast.error(err.message);
+    }
   }
-});
+);
 
-export default createSlice({
+const dataSlice = createSlice({
   name: "data",
-  initialState: {
-    data: [],
-  },
+  initialState: dataState,
   reducers: {},
   extraReducers: {
     [getData.fulfilled]: (state, action) => {
@@ -45,3 +47,5 @@ export default createSlice({
     },
   },
 });
+
+export default dataSlice;

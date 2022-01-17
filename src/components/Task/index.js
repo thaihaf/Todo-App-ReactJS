@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { useState } from "react";
 import { createUseStyles } from "react-jss";
 import clsx from "clsx";
@@ -106,12 +106,7 @@ const useActions = () => {
   };
 };
 
-export default function Task({
-  listCollections,
-  task,
-  handleChangeData,
-  handleSelectTasks,
-}) {
+function Task({ listCollections, task, handleChangeData, handleSelectTasks }) {
   const classes = useStyles();
   const {
     toggleEditTaskDisplayVal,
@@ -225,3 +220,5 @@ export default function Task({
     </div>
   );
 }
+
+export default memo(Task);
