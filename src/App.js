@@ -5,17 +5,16 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import store from "./redux/store";
 
 // Component
 import Header from "./components/Header";
 import RouterComponent from "./components/RouterComponent";
+import Loading from "./components/Loading";
 
 // Css
 import "./App.css";
-import setAuthToken from "./helpers/setHeadersAxios";
 import userSlice from "./redux/reducers/userSlice";
-import { userSelector } from "./redux/selectors";
+import { isLoadingSelector, userSelector } from "./redux/selectors";
 
 // =================================================================
 const useStyles = createUseStyles({
@@ -33,6 +32,7 @@ function App() {
   const classes = useStyles();
   const dispatch = useDispatch();
   const userTemp = useSelector(userSelector);
+  const isLoading = useSelector(isLoadingSelector);
 
   useEffect(() => {
     const expirationDuration = 1000 * 60 * 60; // 1 hours 2
@@ -43,7 +43,6 @@ function App() {
       prevAccepted && currentTime - prevAccepted < expirationDuration;
 
     if (prevAcceptedExpired && userTemp) {
-      // setAuthToken(userTemp.token);
       dispatch(userSlice.actions.setUser(userTemp));
     } else {
       localStorage.clear();
@@ -53,12 +52,12 @@ function App() {
   return (
     <div className={classes.App}>
       <Header />
-
+      {isLoading && <Loading />}
+      
       <RouterComponent />
-
       <ToastContainer
         position="top-center"
-        autoClose={2000}
+        autoClose={3000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick

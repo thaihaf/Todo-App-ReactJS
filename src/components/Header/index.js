@@ -1,15 +1,16 @@
 // lib
 import clsx from "clsx";
+import { memo } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { userSelector } from "../../redux/selectors";
-import "./style.css"
+import "./style.css";
 // components
 import HeaderUser from "./Components/HeaderUser";
 
 // =================================================================
 
-export default function Header() {
+const Header = memo(() => {
   const user = useSelector(userSelector);
 
   return (
@@ -55,4 +56,6 @@ export default function Header() {
       )}
     </div>
   );
-}
+});
+
+export default Header;

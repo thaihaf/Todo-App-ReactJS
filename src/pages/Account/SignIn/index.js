@@ -9,6 +9,8 @@ import { toast } from "react-toastify";
 
 // Component
 import { handleLogin } from "../../../redux/reducers/userSlice";
+import GoogleLoginForm from "../../../components/Buttons/GoogleLoginButton";
+import FacebookLoginButton from "../../../components/Buttons/FacebookLoginButton";
 
 // =================================================================
 const useStyles = createUseStyles({
@@ -70,7 +72,7 @@ export default function SignIn() {
   const onSubmit = async (data) => {
     dispatch(handleLogin(data));
     navigate("/collections");
-    
+
     setErrorForm("");
     toast.success("🦄 Loggin successfully!");
     localStorage.setItem("accepted", new Date().getTime());
@@ -86,18 +88,8 @@ export default function SignIn() {
         <h1 className={classes.signin__title}>Sign In.</h1>
 
         <div className="buttons w-100">
-          <button className="button btn--border btn--hover-border btn--full-width btn--flex btn--hover-trans">
-            <div className="button__icon">
-              <ion-icon name="logo-google"></ion-icon>
-            </div>
-            <div className="button__text">Continue with Google</div>
-          </button>
-          <button className="button btn--border btn--hover-border btn--full-width btn--flex btn--hover-trans">
-            <div className="button__icon">
-              <ion-icon name="logo-facebook"></ion-icon>
-            </div>
-            <div className="button__text">Continue with Facebook</div>
-          </button>
+          <GoogleLoginForm onSubmit={onSubmit} />
+          <FacebookLoginButton onSubmit={onSubmit} />
         </div>
 
         <div className={classes.signin__separate}>or</div>

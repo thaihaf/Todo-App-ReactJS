@@ -37,13 +37,16 @@ export default () => {
           window.location.reload();
           toast.error("Token not acceept authorization");
           break;
-        }  
+        }
         // Many Request
         case 429: {
-          toast.error("To many request, wait 10 second and refresh");
+          // window.location.assign("/");
+          toast.error("To many request, wait 10 second and auto refresh");
+          store.
+
           setTimeout(() => {
             window.location.reload();
-          }, 8000);
+          }, 10000);
           break;
         }
         default: {

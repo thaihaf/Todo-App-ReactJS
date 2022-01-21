@@ -2,14 +2,12 @@
 import clsx from "clsx";
 import { createUseStyles } from "react-jss";
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 // components
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import Settings from "./UserSetting";
 import { userSelector } from "../../../redux/selectors";
-import userSlice from "../../../redux/reducers/userSlice";
+import GoogleLogoutButton from "../../Buttons/LogoutButton";
 
 // service
 
@@ -47,16 +45,6 @@ const useStyles = createUseStyles({
 
 export default function HeaderUser() {
   const classes = useStyles();
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-
-  function HandleLogout() {
-    localStorage.clear();
-    dispatch(userSlice.actions.setUser({}));
-
-    toast.success("🦄 Logout successfully!");
-    navigate("users/signIn");
-  }
 
   const user = useSelector(userSelector);
   const [showUserBar, setshowUserBar] = useState(false);
@@ -101,13 +89,7 @@ export default function HeaderUser() {
           <div className="settingBar__hidden"></div>
         </button>
 
-        <button
-          className="signOutBtn button btn--none-border btn--full-width btn--none-radius btn--hover-bg-gray m-0 text-left "
-          style={{ padding: "1.5rem" }}
-          onClick={HandleLogout}
-        >
-          Sign out
-        </button>
+        <GoogleLogoutButton />
       </div>
 
       <Settings
