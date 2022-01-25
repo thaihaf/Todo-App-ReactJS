@@ -1,6 +1,6 @@
 // lib
 import clsx from "clsx";
-import { memo } from "react";
+import { memo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { userSelector } from "../../redux/selectors";
@@ -12,6 +12,11 @@ import HeaderUser from "./Components/HeaderUser";
 
 const Header = memo(() => {
   const user = useSelector(userSelector);
+  const [value, setValue] = useState('recents');
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
 
   return (
     <div

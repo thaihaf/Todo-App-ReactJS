@@ -15,13 +15,13 @@ const routes = [
   },
   // Public Router
   {
-    path: "/users/signIn",
+    path: "/signIn",
     component: lazy(() => import("../pages/Account/SignIn")),
     exact: true,
     isPublic: true,
   },
   {
-    path: "/users/signUp",
+    path: "/signUp",
     component: lazy(() => import("../pages/Account/SignUp")),
     exact: true,
     isPublic: true,

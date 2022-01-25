@@ -1,3 +1,4 @@
+import React from "react";
 // lib
 import { useState, useEffect, useCallback } from "react";
 import { createUseStyles } from "react-jss";
@@ -10,10 +11,9 @@ import { toast } from "react-toastify";
 // Component
 import Task from "../../components/Task";
 import Paging from "../../components/Paging";
-import CreateTask from "./Components/actions/CreateTask";
-import DeleteTask from "./Components/actions/DeleteTask";
-import TaskActionsBar from "./Components/TaskActionsBar";
+import TaskActionsBar from "./TaskActionsBar";
 import { getCategories } from "../../redux/reducers/categoriesSlice";
+import CreateTask from "../../components/Task/Components/CreateTask";
 
 // Service
 const useStyles = createUseStyles({
@@ -71,53 +71,19 @@ const useStyles = createUseStyles({
   },
 });
 
-const useActions = () => {
-  const [displayAddBarVal, setDisplayAddBarVal] = useState(false);
-
-  const [displayDeleteBarVal, setDisplayDeleteBarVal] = useState(false);
-
-  const toggleAddBar = (value) => (event) => {
-    setDisplayAddBarVal(value);
-  };
-
-  const toggleDeleteBar = (value) => (event) => {
-    setDisplayDeleteBarVal(value);
-  };
-  return {
-    toggleAddBar,
-    toggleDeleteBar,
-    displayAddBarVal,
-    displayDeleteBarVal,
-  };
-};
-
 export default function ListTasks() {
   const classes = useStyles();
   const dispatch = useDispatch();
 
-  const {
-    toggleAddBar,
-    toggleDeleteBar,
-    displayAddBarVal,
-    displayDeleteBarVal,
-  } = useActions();
-
   const data = useSelector(dataSelector);
   const listCollections = useSelector(categoriesSelector);
   const [typeData, setTypeData] = useState("");
+  const [selectedTasks, setSelectedTasks] = useState([]);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const handleChangeData = useCallback((data, type) => {
+  const handleChangeData = (data, type) => {
     type && type === "search" ? setTypeData(type) : setTypeData("");
     dispatch(data);
-  });
-
-  useEffect(() => {
-    handleChangeData(getData());
-    dispatch(getCategories());
-  }, []);
-
-  const [selectedTasks, setSelectedTasks] = useState([]);
+  };
 
   const handleSelectTasks = (id, checked) => {
     let existing = selectedTasks.includes(id);
@@ -129,28 +95,28 @@ export default function ListTasks() {
       setSelectedTasks([...selectedTasks, id]);
     }
   };
-  const handleRemoveTasks = (event) => {
-    if (selectedTasks.length === 0) {
-      toast.warn("Not task select yet");
-    } else {
-      toggleDeleteBar(!displayDeleteBarVal)();
-    }
-  };
-  const clearSelectedTasks = () => {
-    setSelectedTasks([]);
-  };
+
+  useEffect(() => {
+    handleChangeData(getData());
+    dispatch(getCategories());
+  }, []);
+
+  if (data && !listCollections) {
+    toast.error("Network check failed, Wait 3 sencond to reload windown");
+
+    setTimeout(() => {
+      window.location.reload();
+    }, 3000);
+  }
   return (
     <div className="ViewCollection">
       <div className={clsx(classes.content, "content")}>
         <TaskActionsBar
-          toggleAddBar={toggleAddBar}
-          handleRemoveTasks={handleRemoveTasks}
+          listCollections={listCollections}
           handleChangeData={handleChangeData}
         />
 
-        {data &&
-          data.meta &&
-          data.meta.totalItems === 0 &&
+        {data?.meta?.totalItems === 0 &&
           (typeData === "search" ? (
             <div
               className={clsx(classes.taskBar__message)}
@@ -162,53 +128,31 @@ export default function ListTasks() {
               No has any Task match with Search Value
             </div>
           ) : (
-            <button
-              className={clsx(
-                classes.taskBar__action,
-                "button btn--flex btn--bg-gray btn--border btn--hover-bg-gray"
-              )}
-              onClick={toggleAddBar(true)}
+            <CreateTask
+              listCollections={listCollections}
+              handleChangeData={handleChangeData}
             >
-              <div className="taskAction__icon">
-                <ion-icon name="add"></ion-icon>
-              </div>
-              <div className="taskAction__text">Add First Task</div>
-            </button>
+              Add First Task
+            </CreateTask>
           ))}
 
         <div className={clsx(classes.tasks)}>
-          {
-            data?.items?.map((task) => {
-              return (
-                <Task
-                  key={task.id}
-                  task={task}
-                  listCollections={listCollections}
-                  handleChangeData={handleChangeData}
-                  handleSelectTasks={handleSelectTasks}
-                />
-              );
-            })}
+          {data?.items?.map((task) => {
+            return (
+              <Task
+                key={task.id}
+                task={task}
+                listCollections={listCollections}
+                handleChangeData={handleChangeData}
+                handleSelectTasks={handleSelectTasks}
+              />
+            );
+          })}
         </div>
 
-        {data && data.meta && data.meta.totalItems > 0 && (
+        {data?.meta?.totalItems > 0 && (
           <Paging data={data} handleChangeData={handleChangeData} />
         )}
-
-        <CreateTask
-          displayVal={displayAddBarVal}
-          toggleFunc={toggleAddBar}
-          listCollections={listCollections}
-          handleChangeData={handleChangeData}
-        />
-
-        <DeleteTask
-          taskIDs={selectedTasks}
-          displayVal={displayDeleteBarVal}
-          toggleFunc={toggleDeleteBar}
-          handleChangeData={handleChangeData}
-          clearSelectedTasks={clearSelectedTasks}
-        />
       </div>
     </div>
   );

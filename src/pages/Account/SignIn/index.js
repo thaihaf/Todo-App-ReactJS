@@ -89,7 +89,13 @@ export default function SignIn() {
 
         <div className="buttons w-100">
           <GoogleLoginForm onSubmit={onSubmit} />
-          <FacebookLoginButton onSubmit={onSubmit} />
+          {/*<FacebookLoginButton />*/}
+          <button className="button btn--border btn--hover-border btn--full-width btn--flex btn--hover-trans">
+            <div className="button__icon">
+              <ion-icon name="logo-google"></ion-icon>
+            </div>
+            <div className="button__text">Continue with Google</div>
+          </button>
         </div>
 
         <div className={classes.signin__separate}>or</div>
@@ -159,7 +165,7 @@ export default function SignIn() {
 
         <div className={classes.signin__link}>
           <span>Don't have an account?</span>
-          <Link to="/users/signUp" className={classes.signin__link__light}>
+          <Link to="/signUp" className={classes.signin__link__light}>
             Sign up
           </Link>
         </div>

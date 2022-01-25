@@ -78,7 +78,7 @@ export default function SignUp() {
           toast.success("🦄 Reistered successfully!");
           setErrorForm("");
 
-          navigate("/users/signIn");
+          navigate("/signIn");
         })
         .catch((err) => {
           const errMsg = err.response.data.message;
@@ -199,7 +199,7 @@ export default function SignUp() {
 
         <div className={classes.signup__link}>
           <span>Already have an account?</span>
-          <Link to="/users/signIn" className={classes.signup__link__light}>
+          <Link to="/signIn" className={classes.signup__link__light}>
             Sign in
           </Link>
         </div>

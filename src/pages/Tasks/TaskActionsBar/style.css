@@ -1,0 +1,45 @@
+.taskBar__container,
+.taskBar__actions,
+.taskBar__group {
+  display: flex;
+  gap: 1rem;
+}
+
+.taskBar__container {
+  flex-direction: column;
+  margin-bottom: 2rem;
+  width: 80%;
+  max-width: 100rem;
+}
+.taskBar__group {
+  align-items: center;
+}
+.taskBar__details {
+  margin-right: auto;
+}
+.taskBar__group_search {
+  justify-content: right;
+}
+.taskBar__detail {
+  font-size: 2rem;
+  font-weight: 700;
+}
+.taskBar__action {
+  height: 100%;
+  padding: 0.8rem 2rem !important;
+  margin-bottom: 0;
+  border-radius: 1.5rem;
+  position: relative;
+}
+
+@media only screen and (max-width: 647px) {
+  .taskBar__detail {
+    font-size: 1.8rem;
+  }
+  .taskBar__action {
+    padding: 0.5rem 1.7rem !important;
+  }
+  .taskBar__action ion-icon {
+    font-size: 1.7rem;
+  }
+}

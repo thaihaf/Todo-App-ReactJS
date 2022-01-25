@@ -1,12 +1,10 @@
-import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
-import { toast } from "react-toastify";
+import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
 
-export default function FacebookLoginButton({ onSubmit }) {
+export default function FacebookLoginButton() {
   const appId = "684100939620420";
 
   const responseFacebook = (response) => {
-    console.log("Login Successful ", response);
-    toast.success("Login Successful, check profile in console");
+    console.log(response);
     // onSubmit()
   };
 

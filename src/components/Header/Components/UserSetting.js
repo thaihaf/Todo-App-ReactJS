@@ -9,6 +9,7 @@ import { userSelector } from "../../../redux/selectors";
 import { handleLogin } from "../../../redux/reducers/userSlice";
 import { useForm } from "react-hook-form";
 import { useEffect } from "react";
+import { DeleteUser } from "../../Buttons/DeleteUser";
 
 const useStyles = createUseStyles({
   Settings: {
@@ -231,13 +232,8 @@ const Settings = ({ toggleVal, toggleFunc }) => {
           </div>
 
           <div className={clsx(classes.settings__buttons, "w-100 d-flex")}>
-            <button
-              className="settings__button button btn--none-border btn--hover-bg-gray-light mr-auto mb-0"
-              style={{ backgroundColor: "red" }}
-              type="button"
-            >
-              Delete
-            </button>
+            <DeleteUser />
+            
             <button
               className="settings__button button btn--none-border btn--hover-bg-gray-light ml-auto mb-0"
               style={{ backgroundColor: "#3D3C50" }}

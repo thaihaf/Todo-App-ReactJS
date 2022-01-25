@@ -3,9 +3,9 @@ import { useState } from "react";
 import { createUseStyles } from "react-jss";
 import clsx from "clsx";
 
-import EditTask from "../../pages/Tasks/Components/actions/EditTask";
-import DeleteTask from "../../pages/Tasks/Components/actions/DeleteTask";
-import SubmitTask from "../../pages/Tasks/Components/actions/SubmitTask";
+import EditTask from "./Components/EditTask";
+import DeleteTask from "./Components/DeleteTask";
+import { Menu } from "@mui/material";
 
 const useStyles = createUseStyles({
   task__bar: {
@@ -23,35 +23,22 @@ const useStyles = createUseStyles({
     justifyContent: "space-between",
     alignItems: "center",
     position: "relative",
-    padding: "1rem",
     borderBottom: "2px solid var(--bg-btn-pink)",
-  },
-  collection__actions: {
-    minWidth: "max-content",
-    top: "101%",
-    right: "4%",
-    borderBottomRightRadius: "1.1rem",
-    borderBottomLeftRadius: "1.1rem",
-    backgroundColor: "#1e1e29",
-    zIndex: "2",
-    border: "2px solid var(--bg-btn-pink)",
-    position: "absolute",
-  },
-  collection__action: {
-    fontSize: "1.3rem",
-    padding: "1.2rem 1.8rem",
   },
   task__title: {
     width: "100%",
     fontSize: "1.6rem",
     flexGrow: "1",
     padding: "0 1rem 1rem",
+    wordBreak: "break-word",
   },
+
   task__top: {
     width: "100%",
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
+    position: "relative",
   },
   task__checkbox: {
     position: "relative",
@@ -62,6 +49,7 @@ const useStyles = createUseStyles({
     alignItems: "center",
     borderRadius: "0.3rem",
     border: "2px solid var(--bg-btn-pink)",
+    margin: "1rem",
   },
   task__input: {
     position: "absolute",
@@ -80,53 +68,23 @@ const useStyles = createUseStyles({
   },
 });
 
-const useActions = () => {
-  const [editTaskDisplayVal, setEditTaskDisplayVal] = useState(false);
-  const [deleteTaskDisplayVal, setDeleteTaskDisplayVal] = useState(false);
-  const [submitTaskDisplayVal, setSubmitTaskDisplayVal] = useState(false);
-
-  // start - Taskection
-  const toggleEditTaskDisplayVal = (value) => (event) => {
-    setEditTaskDisplayVal(value);
-  };
-  const toggleDeleteTaskDisplayVal = (value) => (event) => {
-    setDeleteTaskDisplayVal(value);
-  };
-  const toggleSubmitTaskDisplayVal = (value) => (event) => {
-    setSubmitTaskDisplayVal(value);
-  };
-
-  return {
-    toggleEditTaskDisplayVal,
-    toggleDeleteTaskDisplayVal,
-    toggleSubmitTaskDisplayVal,
-    editTaskDisplayVal,
-    deleteTaskDisplayVal,
-    submitTaskDisplayVal,
-  };
-};
-
 function Task({ listCollections, task, handleChangeData, handleSelectTasks }) {
   const classes = useStyles();
-  const {
-    toggleEditTaskDisplayVal,
-    toggleDeleteTaskDisplayVal,
-    toggleSubmitTaskDisplayVal,
-    editTaskDisplayVal,
-    deleteTaskDisplayVal,
-    submitTaskDisplayVal,
-  } = useActions();
-
-  const [displayActionsBarVal, setDisplayActionsBarVal] = useState(false);
-  const toggelActionsBar = (e) => {
-    setDisplayActionsBarVal(!displayActionsBarVal);
-  };
 
   const [checkboxSelected, setCheckboxSelected] = useState(false);
   const handleSelectionChange = (id) => (e) => {
     let checked = e.target.checked;
     setCheckboxSelected(checked);
     handleSelectTasks(id, checked);
+  };
+
+  const [anchorEl, setAnchorEl] = useState(null);
+  const openActionsBar = Boolean(anchorEl);
+  const handleOpenActionsBar = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleCloseActionsBar = () => {
+    setAnchorEl(null);
   };
 
   return (
@@ -153,70 +111,62 @@ function Task({ listCollections, task, handleChangeData, handleSelectTasks }) {
               onChange={handleSelectionChange(task.id)}
             />
           </div>
-          <ion-icon
-            name="ellipsis-vertical"
-            style={{ fontSize: "2rem", marginLeft: "auto" }}
-            onClick={toggelActionsBar}
-          ></ion-icon>
-        </div>
 
-        <div
-          className={clsx(
-            classes.collection__actions,
-            !displayActionsBarVal && "d-none"
-          )}
-        >
-          <div
-            className={clsx(
-              classes.collection__action,
-              " button btn--none-border btn--full-width btn--none-radius btn--hover-bg-gray m-0 text-left text-capitalize"
-            )}
-            onClick={toggleSubmitTaskDisplayVal(true)}
-          >
-            Submit Task
-          </div>
-          <div
-            className={clsx(
-              classes.collection__action,
-              " button btn--none-border btn--full-width btn--none-radius btn--hover-bg-gray m-0 text-left text-capitalize"
-            )}
-            onClick={toggleEditTaskDisplayVal(true)}
-          >
-            edit task
-          </div>
-          <div
-            className={clsx(
-              classes.collection__action,
-              " button btn--none-border btn--full-width btn--none-radius btn--hover-bg-gray m-0 text-left text-capitalize"
-            )}
-            onClick={toggleDeleteTaskDisplayVal(true)}
-          >
-            delete task
+          <div className="actions_bar">
+            <ion-icon
+              name="ellipsis-vertical"
+              style={{
+                fontSize: "2rem",
+                marginLeft: "auto",
+                padding: "1rem",
+              }}
+              onClick={handleOpenActionsBar}
+            ></ion-icon>
+
+            <Menu
+              id="demo-positioned-menu"
+              aria-labelledby="demo-positioned-button"
+              anchorEl={anchorEl}
+              open={openActionsBar}
+              onClose={handleCloseActionsBar}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "right",
+              }}
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              PaperProps={{
+                style: {
+                  backgroundColor: "#1e1e29",
+                  padding: "0",
+                  border: "2px solid var(--bg-btn-pink)",
+                  borderTopRightRadius: "0",
+                  borderTopLeftRadius: "0",
+                  borderBottomRightRadius: "1.1rem",
+                  borderBottomLeftRadius: "1.1rem",
+                  zIndex: "2",
+                },
+              }}
+            >
+              <EditTask
+                task={task}
+                listCollections={listCollections}
+                handleChangeData={handleChangeData}
+                handleCloseActionsBar={handleCloseActionsBar}
+              />
+              <DeleteTask
+                task={task}
+                handleChangeData={handleChangeData}
+                handleCloseActionsBar={handleCloseActionsBar}
+              />
+            </Menu>
           </div>
         </div>
       </div>
 
       <div className={clsx(classes.task__title)}>{task.title}</div>
-
-      <EditTask
-        task={task}
-        listCollections={listCollections}
-        displayVal={editTaskDisplayVal}
-        toggleFunc={toggleEditTaskDisplayVal}
-        handleChangeData={handleChangeData}
-      />
-      <SubmitTask
-        task={task}
-        displayVal={submitTaskDisplayVal}
-        toggleFunc={toggleSubmitTaskDisplayVal}
-        handleChangeData={handleChangeData}
-      />
-      <DeleteTask
-        taskIDs={task.id}
-        displayVal={deleteTaskDisplayVal}
-        toggleFunc={toggleDeleteTaskDisplayVal}
-        handleChangeData={handleChangeData}
-      />
     </div>
   );
 }

@@ -40,9 +40,7 @@ export default () => {
         }
         // Many Request
         case 429: {
-          // window.location.assign("/");
-          toast.error("To many request, wait 10 second and auto refresh");
-          store.
+          toast.error("Too many request, wait 10 second and auto refresh");
 
           setTimeout(() => {
             window.location.reload();

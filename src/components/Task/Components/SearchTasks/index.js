@@ -3,7 +3,7 @@ import { useState, useRef } from "react";
 import clsx from "clsx";
 import { toast } from "react-toastify";
 
-import { searchTasks } from "../../../../../redux/reducers/dataSlice";
+import { searchTasks } from "../../../../redux/reducers/dataSlice";
 
 const useStyles = createUseStyles({
   searchTasks__bar: {
@@ -33,10 +33,7 @@ const useStyles = createUseStyles({
   },
 });
 
-export default function SearchTask({
-  displayVal,
-  handleChangeData,
-}) {
+export default function SearchTasks({ displayVal, handleChangeData }) {
   const classes = useStyles();
 
   const [searchVal, setSearchVal] = useState("");
