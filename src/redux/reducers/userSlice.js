@@ -11,6 +11,10 @@ export const handleLogin = createAsyncThunk(
         username: data.username,
         password: data.password,
       });
+
+      toast.success("🦄 Loggin successfully!");
+      localStorage.setItem("accepted", new Date().getTime());
+
       return userTemp;
     } catch (error) {
       const errorMessage = error.response.data.message;

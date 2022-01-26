@@ -7,8 +7,5 @@ const dataState = {
 const userState = {
   user: {},
 };
-const isLoadingState = {
-  isLoading: false,
-};
 
-export { isLoadingState, userState, dataState, categoriesState };
+export {userState, dataState, categoriesState };

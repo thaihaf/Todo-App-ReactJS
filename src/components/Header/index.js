@@ -1,22 +1,17 @@
 // lib
 import clsx from "clsx";
-import { memo, useState } from "react";
+import { memo } from "react";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { userSelector } from "../../redux/selectors";
 import "./style.css";
+
+import isAuthenticated from "../../ultils/isAuthenticate";
 // components
 import HeaderUser from "./Components/HeaderUser";
 
 // =================================================================
 
-const Header = memo(() => {
-  const user = useSelector(userSelector);
-  const [value, setValue] = useState('recents');
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
+const Header = () => {
+  const isAuthen = isAuthenticated();
 
   return (
     <div
@@ -30,7 +25,7 @@ const Header = memo(() => {
         <div className={"header__logo_text"}>todo app</div>
       </Link>
 
-      {user && user.username && (
+      {isAuthen && (
         <div
           className={clsx("header__links", "d-flex align-items-center mr-auto")}
         >
@@ -43,16 +38,16 @@ const Header = memo(() => {
         </div>
       )}
 
-      {user && user.username ? (
+      {isAuthen ? (
         <HeaderUser />
       ) : (
         <div className={clsx("ml-auto btns--flex")}>
-          <Link to="/users/signIn">
+          <Link to="/signIn">
             <button className="button btn--none-border btn--hover-bb mb-0">
               Sign in
             </button>
           </Link>
-          <Link to="/users/signUp">
+          <Link to="/signUp">
             <button className="button btn--border btn--hover-border mb-0">
               Sign up
             </button>
@@ -61,6 +56,6 @@ const Header = memo(() => {
       )}
     </div>
   );
-});
+};
 
 export default Header;

@@ -6,6 +6,7 @@ import clsx from "clsx";
 import { createUseStyles } from "react-jss";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
+import userAPI from "../../../ultils/fetchAPI/userAPI";
 
 // =================================================================
 const useStyles = createUseStyles({
@@ -69,22 +70,17 @@ export default function SignUp() {
 
   const onSubmit = async (data) => {
     if (data.password === data.rePassword) {
-      axios({
-        method: "post",
-        url: "auth/register",
-        data: { username: data.username, password: data.password },
-      })
-        .then(() => {
-          toast.success("🦄 Reistered successfully!");
-          setErrorForm("");
-
-          navigate("/signIn");
-        })
-        .catch((err) => {
-          const errMsg = err.response.data.message;
-          toast.error(errMsg);
-          setErrorForm(errMsg);
-        });
+      try {
+        const user = { username: data.username, password: data.password };
+        await userAPI().register(user);
+        
+        navigate("/signIn");
+        setErrorForm("");
+        toast.success("🦄 Register Successful!");
+      } catch (error) {
+        let errForm = error.message;
+        toast.error(errForm);
+      }
     } else {
       setErrorForm("Repassword doesn't match");
     }

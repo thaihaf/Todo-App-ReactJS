@@ -71,11 +71,9 @@ export default function SignIn() {
 
   const onSubmit = async (data) => {
     dispatch(handleLogin(data));
-    navigate("/collections");
 
+    navigate("/collections");
     setErrorForm("");
-    toast.success("🦄 Loggin successfully!");
-    localStorage.setItem("accepted", new Date().getTime());
   };
 
   useEffect(() => {

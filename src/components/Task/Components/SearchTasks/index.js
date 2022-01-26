@@ -39,12 +39,7 @@ export default function SearchTasks({ displayVal, handleChangeData }) {
   const [searchVal, setSearchVal] = useState("");
   const typeingTimeoutRef = useRef(null);
 
-  const searchTasksAction = async () => {};
-
-  const handleChange = (e) => {
-    let value = e.target.value;
-    setSearchVal(value);
-
+  const handleSearch = (value) => {
     if (typeingTimeoutRef.current) {
       clearTimeout(typeingTimeoutRef.current);
     }
@@ -57,6 +52,16 @@ export default function SearchTasks({ displayVal, handleChangeData }) {
         toast.error(errForm);
       }
     }, 1000);
+  };
+
+  const handleClearInput = () => {
+    handleSearch("");
+    setSearchVal("");
+  };
+
+  const handleChange = (e) => {
+    handleSearch(e.target.value);
+    setSearchVal(e.target.value);
   };
 
   return (
@@ -80,15 +85,17 @@ export default function SearchTasks({ displayVal, handleChangeData }) {
         />
       </div>
 
-      <div className="searchTasks__button" onClick={searchTasksAction}>
-        <ion-icon
-          name="search"
-          style={{
-            fontSize: "2rem",
-            cursor: "pointer",
-          }}
-        ></ion-icon>
-      </div>
+      {searchVal !== "" && (
+        <div className="searchTasks__button" onClick={handleClearInput}>
+          <ion-icon
+            name="close-outline"
+            style={{
+              fontSize: "2rem",
+              cursor: "pointer",
+            }}
+          ></ion-icon>
+        </div>
+      )}
     </div>
   );
 }

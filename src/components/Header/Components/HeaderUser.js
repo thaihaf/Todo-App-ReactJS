@@ -4,9 +4,10 @@ import { createUseStyles } from "react-jss";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 
+
 // components
 import Settings from "./UserSetting";
-import { userSelector } from "../../../redux/selectors";
+import isAuthenticated from "./../../../ultils/isAuthenticate"
 import GoogleLogoutButton from "../../Buttons/LogoutButton";
 
 // service
@@ -46,7 +47,8 @@ const useStyles = createUseStyles({
 export default function HeaderUser() {
   const classes = useStyles();
 
-  const user = useSelector(userSelector);
+  const isAuthen = isAuthenticated();
+  
   const [showUserBar, setshowUserBar] = useState(false);
 
   const [toggleSettingBarVal, setToggleSettingBarVal] = useState(false);
@@ -73,7 +75,7 @@ export default function HeaderUser() {
         <div className="usersBar__review">
           <div className="usersBar__title">Signed in as</div>
           <div className="usersBar__fullname font-weight-bold text-capitalize">
-            {user.username}
+            {isAuthen.username}
           </div>
         </div>
 

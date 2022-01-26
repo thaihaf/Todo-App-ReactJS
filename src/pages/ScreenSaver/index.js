@@ -1,9 +1,7 @@
 // lib
 import { createUseStyles } from "react-jss";
-import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { userSelector } from "../../redux/selectors";
-
+import isAuthenticated from "../../ultils/isAuthenticate";
 // Component
 
 // =================================================================
@@ -32,7 +30,7 @@ const useStyles = createUseStyles({
 function ScreenSaver() {
   const classes = useStyles();
 
-  const user = useSelector(userSelector);
+  const isAuthen = isAuthenticated();
 
   return (
     <div className={classes.ScreenSaver}>
@@ -43,7 +41,7 @@ function ScreenSaver() {
           copletion.
         </p>
         <div className={classes.screenSaver__buttons + " btns--flex"}>
-          <Link to={user ? "/collections" : "/users/signIn"}>
+          <Link to={isAuthen ? "/collections" : "/signIn"}>
             <button
               className={`${classes.screenSaver__button} button btn--none-border btn--bg-pink btn--bb-pink btn--hover-trans`}
             >

@@ -13,15 +13,20 @@ import { PersistGate } from "redux-persist/integration/react";
 // import setAuthToken from "./helpers/setHeadersAxios";
 import Loading from "./components/Loading";
 
+window.addEventListener("error", (e) => {
+  // prompt user to confirm refresh
+  if (/Loading chunk [\d]+ failed/.test(e.message)) {
+    window.location.reload();
+  }
+});
+
 ReactDOM.render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
       <Router>
-        <Suspense fallback={<Loading />}>
-          <React.StrictMode>
-            <App />
-          </React.StrictMode>
-        </Suspense>
+        <React.StrictMode>
+          <App />
+        </React.StrictMode>
       </Router>
     </PersistGate>
   </Provider>,

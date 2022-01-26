@@ -15,7 +15,7 @@ export default function GoogleLogoutButton({ onSubmit }) {
     dispatch(userSlice.actions.setUser({}));
 
     toast.success("🦄 Logout successfully!");
-    navigate("users/signIn");
+    navigate("/signIn");
   };
 
   return (

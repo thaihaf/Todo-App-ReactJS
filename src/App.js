@@ -1,5 +1,5 @@
 // lib
-import React from "react";
+import React, { Suspense } from "react";
 import { createUseStyles } from "react-jss";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,10 +11,13 @@ import Header from "./components/Header";
 import RouterComponent from "./components/RouterComponent";
 import Loading from "./components/Loading";
 
+import IsEmptyObject from "./ultils/checkObject/IsEmptyObject";
+import isAuthenticated from "./ultils/isAuthenticate";
+
 // Css
 import "./App.css";
 import userSlice from "./redux/reducers/userSlice";
-import { isLoadingSelector, userSelector } from "./redux/selectors";
+import { userSelector } from "./redux/selectors";
 
 // =================================================================
 const useStyles = createUseStyles({
@@ -32,7 +35,7 @@ function App() {
   const classes = useStyles();
   const dispatch = useDispatch();
   const userTemp = useSelector(userSelector);
-  const isLoading = useSelector(isLoadingSelector);
+  const isAuthen = isAuthenticated();
 
   useEffect(() => {
     const expirationDuration = 1000 * 60 * 60; // 1 hours 2
@@ -42,32 +45,34 @@ function App() {
     const prevAcceptedExpired =
       prevAccepted && currentTime - prevAccepted < expirationDuration;
 
-    if (prevAcceptedExpired && userTemp) {
+    if (prevAcceptedExpired && isAuthen) {
+      console.log("Timein");
       dispatch(userSlice.actions.setUser(userTemp));
     } else {
+      console.log("Timeout");
       localStorage.clear();
     }
-  }, [dispatch, userTemp]);
+  }, []);
 
   return (
     <div className={classes.App}>
       <Header />
-      {isLoading && <Loading />}
-      
-      <RouterComponent />
-      <ToastContainer
-        position="bottom-left"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        transition={Bounce}
-        style={{ fontSize: "1.4rem" }}
-      />
+      <Suspense fallback={<Loading />}>
+        <RouterComponent />
+        <ToastContainer
+          position="bottom-left"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          transition={Bounce}
+          style={{ fontSize: "1.4rem" }}
+        />
+      </Suspense>
     </div>
   );
 }
