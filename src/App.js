@@ -1,21 +1,23 @@
 // lib
-import React from "react";
+import React, { Suspense } from "react";
 import { createUseStyles } from "react-jss";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 // Component
-import Header from "./components/header/Header";
-import Routers from "./routers/Routers";
+import Header from "./components/Header";
+import RouterComponent from "./components/RouterComponent";
+import Loading from "./components/Loading";
 
-// Service
-import setAuthToken from "./service/defaultAPI/setAuthToken";
-import userSlice from "./redux/slice/userSlice"
+import IsEmptyObject from "./ultils/checkObject/IsEmptyObject";
+import isAuthenticated from "./ultils/isAuthenticate";
 
 // Css
 import "./App.css";
+import userSlice from "./redux/reducers/userSlice";
+import { userSelector } from "./redux/selectors";
 
 // =================================================================
 const useStyles = createUseStyles({
@@ -25,12 +27,15 @@ const useStyles = createUseStyles({
     backgroundPosition: "top",
     backgroundSize: "contain",
     backgroundRepeat: "no-repeat",
+    minWidth: "295px",
   },
 });
 
 function App() {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const userTemp = useSelector(userSelector);
+  const isAuthen = isAuthenticated();
 
   useEffect(() => {
     const expirationDuration = 1000 * 60 * 60; // 1 hours 2
@@ -40,37 +45,34 @@ function App() {
     const prevAcceptedExpired =
       prevAccepted && currentTime - prevAccepted < expirationDuration;
 
-    if (prevAcceptedExpired) {
-      const userTemp = JSON.parse(localStorage.getItem("user"));
-      setAuthToken(userTemp.token);
+    if (prevAcceptedExpired && isAuthen) {
+      console.log("Timein");
       dispatch(userSlice.actions.setUser(userTemp));
     } else {
-      localStorage.removeItem("user");
-      localStorage.removeItem("accepted");
-
-      setAuthToken();
-      dispatch(userSlice.actions.setUser({}));
+      console.log("Timeout");
+      localStorage.clear();
     }
   }, []);
 
   return (
     <div className={classes.App}>
       <Header />
-      <ToastContainer
-        position="top-center"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        transition={Bounce}
-        style={{ fontSize: "1.4rem" }}
-      />
-
-      <Routers />
+      <Suspense fallback={<Loading />}>
+        <RouterComponent />
+        <ToastContainer
+          position="bottom-left"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          transition={Bounce}
+          style={{ fontSize: "1.4rem" }}
+        />
+      </Suspense>
     </div>
   );
 }

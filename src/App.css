@@ -8,6 +8,7 @@
   --text-color-dark: #000;
   /* box-sizing:  padding-box; */
   /* Value */
+  --toastify-toast-width: 250px;
 }
 
 * {
@@ -124,6 +125,7 @@ ion-icon {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  cursor: pointer;
 }
 
 /*======================== App =======================*/

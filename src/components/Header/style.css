@@ -1,0 +1,40 @@
+.Header {
+  padding: 2rem 10rem;
+  font-size: 1.6rem;
+  background-color: #1d1d26;
+  z-index: 10;
+  gap: 4rem;
+  min-width: max-content;
+}
+.header__logo {
+  text-transform: uppercase;
+  font-size: 3rem;
+  font-weight: 700;
+  gap: 1rem;
+  color: var(--bg-btn-pink);
+}
+.header__links {
+  gap: 2rem;
+}
+
+@media only screen and (max-width: 647px) {
+  .Header {
+    padding: 2rem 5rem;
+    font-size: 1.3rem;
+    gap: 2rem;
+    min-width: max-content;
+  }
+  .header__logo_text {
+    display: none;
+  }
+}
+@media only screen and (max-width: 431px) {
+  .btns--flex {
+    gap: 0.5rem !important;
+  }
+  .button {
+    padding: 0.8rem 2rem !important;
+    font-size: 1.3rem !important;
+  }
+}
+
